@@ -1,12 +1,12 @@
 ﻿@{
-    ViewData["Title"] = "Вход";
+    ViewData["Title"] = "Создание аккаунта";
 }
 
 <div class="loginRegArea">
 
 
     <div class="loginRegHeader">
-        <h1>Авторизация</h1>
+        <h1>Регистрация</h1>
     </div>
     <form>
         <div class="form-group">
@@ -21,20 +21,16 @@
 
         <div class="form-group">
             <button class="btn btn-outline-primary btn-lg" type="submit">
-                Войти
+                Создать аккаунт
             </button>
         </div>
 
         <div class="form-group">
-            Нет аккаунта? <a asp-area="" asp-controller="Account" asp-action="CreateAccount">Создай его!</a>
+            Есть аккаунт? <a asp-area="" asp-controller="Account" asp-action="Login">Страница входа.</a>
         </div>
         <div class="form-group">
-           Забыли пароль? <a href="#">Восстановить его можно тут!</a>
+            Забыли пароль? <a href="#">Восстановить его можно тут!</a>
         </div>
     </form>
 </div>
-
-
-
-
 

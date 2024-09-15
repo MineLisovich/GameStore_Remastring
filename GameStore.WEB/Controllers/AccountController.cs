@@ -9,6 +9,10 @@ namespace GameStore.WEB.Controllers
         public IActionResult Login()
         {
             return View();
+        }   
+        public IActionResult CreateAccount()
+        {
+            return View();
         }
     }
 }

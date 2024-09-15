@@ -49,17 +49,13 @@ div.logoArea {
     color: royalblue !important;
 
 }
-/*LOGIN STYLE*/
+/*LOGIN & REG STYLE*/
 
-div.loginArea {
-   margin-top:auto;
-   margin-bottom:auto;
-   margin-left:auto;
-   margin-right:auto;  
-
-}
-
-div.loginArea {
+div.loginRegArea {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: auto;
+    margin-right: auto;
     width: 50%;
     margin-top: 5%;
     padding: 10px;
@@ -67,7 +63,7 @@ div.loginArea {
     border-left: 1px solid royalblue;
     border-radius: 10px;
 }
-div.loginHeader{
+div.loginRegHeader{
     text-align:center;
 }
 .form-group {
