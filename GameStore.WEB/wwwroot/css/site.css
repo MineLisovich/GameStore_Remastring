@@ -20,3 +20,32 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+/*HEADER STYLE*/
+div.logoArea {
+    width: auto;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    transition: color 0.3s;
+}
+
+    div.logoArea p {
+        display: inline-block;
+        font-size: 40px;
+    }
+
+        div.logoArea p.logo {
+            color: royalblue;
+        }
+
+    div.logoArea:hover p {
+        color: royalblue;
+    }
+.nav-item a {
+    font-size: 25px;
+    transition: color 0.3s;
+}
+.nav-item:hover a {
+    color: royalblue !important;
+
+}
