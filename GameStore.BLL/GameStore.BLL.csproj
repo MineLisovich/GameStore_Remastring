@@ -7,6 +7,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="MailKit" Version="4.7.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GameStore.DAL\GameStore.DAL.csproj" />
   </ItemGroup>
 
