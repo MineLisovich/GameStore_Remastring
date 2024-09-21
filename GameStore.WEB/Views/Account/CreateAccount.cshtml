@@ -1,0 +1,39 @@
+﻿@model AccountModel
+@{
+    ViewData["Title"] = "Создание аккаунта";
+}
+
+<div class="loginRegArea">
+
+
+    <div class="loginRegHeader">
+        <h1>Регистрация</h1>
+    </div>
+    <form asp-area="" asp-controller="Account" asp-action="CreateAccount" method="post" >
+        <div class="form-group">
+            <label asp-for="Email">Email:</label>
+            <input asp-for=Email type="email" class="form-control" aria-describedby="emailHelp" placeholder="example@gmail.com" autocomplete="off" />
+            <span asp-validation-for="Email" class="validError"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Password">Пароль:</label>
+            <input asp-for=Password type="password" class="form-control" placeholder="Введите пароль" autocomplete="off" />
+            <span asp-validation-for="Password" class="validError"></span>
+        </div>
+
+        <div class="form-group">
+            <button class="btn btn-outline-primary btn-lg" type="submit">
+                Создать аккаунт
+            </button>
+        </div>
+
+        <div class="form-group">
+            Есть аккаунт? <a asp-area="" asp-controller="Account" asp-action="Login">Страница входа.</a>
+        </div>
+        <div class="form-group">
+            Забыли пароль? <a href="#">Восстановить его можно тут!</a>
+        </div>
+    </form>
+</div>
+
