@@ -1,4 +1,6 @@
-﻿<div class="form-group">
+﻿@model UserProfileModel
+
+<div class="form-group">
     <div class="avatar">
         <img src="~/img/useravatars/user.jpg" alt="user.jpg" class="rounded-circle" />
     </div>
@@ -7,7 +9,7 @@
     <span class="validError"></span>
 </div>
 <div class="form-group">
-    <label for="Email">Email:</label>
-    <input id="Email" type="email" class="form-control" aria-describedby="emailHelp" placeholder="example@gmail.com" />
-    <span class="validError"></span>
+    <label asp-for="AppUser.Email">Email:</label>
+    <input asp-for=AppUser.Email type="email" class="form-control" aria-describedby="emailHelp" placeholder="example@gmail.com" />
+    <span asp-validation-for="AppUser.Email" class="validError"></span>
 </div>

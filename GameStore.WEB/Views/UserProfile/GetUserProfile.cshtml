@@ -8,10 +8,34 @@
 @section js
 {
     <script src="~/js/UserProfileScripts/UserProfileScript.js"></script>
+
+    <script>
+        
+        // ШАГ 1. НАСТРОЙКА ОБЩЕГО ПОВЕДЕНИЯ МОДАЛОК
+        $(document).ready(function () {
+           //НАСТРОЙКА ПОВЕДЕНИЯ МОДАЛОК - Алерты
+           AddHandlerClickForButtonsOfActionModals('modalEditUserProfileData','profile');
+          
+           //НАСТРОЙКА ПОВЕДЕНИЯ МОДАЛОК: Setting modal Create & Edit
+           AddHandlerShownModalForCreateEditModal("modalNrvkCreateEditPassport", "editNrvkForm");
+        });
+        // ШАГ 2. НАСТРОЙКА МАРШРУТОВ
+        function GetURLForAjaxByActionType(actionType) {
+            var url = "";
+            switch (actionType) {
+                case "edit":
+                    url = '@Url.Action("GetPartialWorkOnData", "UserProfile")';
+                    break;
+            }
+            return url;
+        }
+    </script>
 }
 <div class="row">
    @*  USER DATA *@
     <div class="col">
+        <input asp-for="AppUser.Id" hidden/>
+        <input asp-for="AppUser.Email" hidden />
         <div class="avatar">
             @if(Model.AppUser.AvatarImage.Length == 0)
             {
@@ -29,7 +53,7 @@
         <div calss="userinfo">
             <div class="userdata">
                 <h4>@Model.AppUser.Email</h4>
-                <button type="button" id="btnEditProfileData" class="btn btn-outline-primary">Редактировать данные</button>
+                <button type="button" id="btnEditProfileData" data-section="userdata" class="btn btn-outline-primary">Редактировать данные</button>
             </div>
             <div class="userdata">
                 <h5>Дополнительные функции</h5>
@@ -126,11 +150,11 @@
 </div>
 
 <div id="modalWrapper">
-    @* Потом удалить *@
-    @await Html.PartialAsync("_Partial.EditUserData")
+  
 </div>
 
 <div id="modalActionWrapper">
+    @await Html.PartialAsync("_Partial.Action.DataNotSaved")
     @await Html.PartialAsync("_Partial.Action.Warning")
     @await Html.PartialAsync("_Partial.Action.Success")
     @await Html.PartialAsync("_Partial.Action.Error") 

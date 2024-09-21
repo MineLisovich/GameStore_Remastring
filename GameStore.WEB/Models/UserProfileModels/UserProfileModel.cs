@@ -28,5 +28,8 @@ namespace GameStore.WEB.Models.UserProfileModels
         /// Вывод ошибки
         /// </summary>
         public NotFoundResultModel NotFound { get; set; }
+
+        //
+        public bool IsChangePassword {  get; set; }
     }
 }

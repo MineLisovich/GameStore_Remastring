@@ -1,15 +1,15 @@
-﻿<div class="modal fade" id="modalActionWarning" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
+﻿<div class="modal fade modal-js" id="modalActionWarning" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" id="modalWarningDialogContainer">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">Внимание!</h5>
             </div>
             <div class="modal-body modal-message-js">
-               
+                <span id="actionMessage" class="text-center"> </span>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Назад</button>
-                <button type="button" id="btnGoToAction" data-action="" data-key="" data-dismiss="modal" class="btn btn-outline-primary">Далее</button>
+                <button type="button" id="btnGoToAction" data-action="" data-key="" data-section="" data-dismiss ="modal" class="btn btn-outline-primary">Далее</button>
             </div>
         </div>
     </div>

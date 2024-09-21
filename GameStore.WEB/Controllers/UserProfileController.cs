@@ -20,10 +20,18 @@ namespace GameStore.WEB.Controllers
         }
 
         #region PUBLIC METHODS - GET
+        [HttpGet]
         public async Task <IActionResult> GetUserProfile()
         {
             UserProfileModel model = await CreateShowUserProfileModel(TempData);
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetPartialWorkOnData(string userId, bool isChangePassword)
+        {
+            UserProfileModel model = await CreateDataUserProfileModel(userId, isChangePassword);
+            return PartialView("_Partial.EditUserData", model);
         }
         #endregion
 
@@ -38,6 +46,15 @@ namespace GameStore.WEB.Controllers
             model.LastAction = GetInfoAboutLastActionFromTempData(TempData);
             return model;
         }
+
+        private async Task<UserProfileModel> CreateDataUserProfileModel(string userId, bool isChangePassword)
+        {
+            UserProfileModel model = new();
+            model.AppUser = await _userProfileService.GetUserDataByEmailAsync(userId);
+            model.IsChangePassword = isChangePassword;
+            return model;
+
+        }
         #endregion
 
         #region PRIVATE METHODS - TEMP DATA
@@ -47,11 +64,11 @@ namespace GameStore.WEB.Controllers
             return lastAction;
         }
 
-        private UserProfileModel GetFromTempData(ITempDataDictionary TempData)
-        {
-            UserProfileModel model = (TempData.ContainsKey("NotSavedModel")) ? JsonConvert.DeserializeObject<UserProfileModel>((string)TempData["NotSavedModel"]) : null;
-            return model;
-        }
+        //private UserProfileModel GetFromTempData(ITempDataDictionary TempData)
+        //{
+        //    UserProfileModel model = (TempData.ContainsKey("NotSavedModel")) ? JsonConvert.DeserializeObject<UserProfileModel>((string)TempData["NotSavedModel"]) : null;
+        //    return model;
+        //}
 
         private ITempDataDictionary SetTempDataForInfoAboutLastAction(ResultServiceModel result, int actionTypeId)
         {
@@ -91,11 +108,11 @@ namespace GameStore.WEB.Controllers
             return TempData;
            
         }
-        private ITempDataDictionary SetTempDataWithUnsavedData(UserProfileModel model)
-        {
-            TempData["NotSavedModel"] = JsonConvert.SerializeObject(model);
-            return TempData;
-        }
+        //private ITempDataDictionary SetTempDataWithUnsavedData(UserProfileModel model)
+        //{
+        //    TempData["NotSavedModel"] = JsonConvert.SerializeObject(model);
+        //    return TempData;
+        //}
         #endregion
     }
 }

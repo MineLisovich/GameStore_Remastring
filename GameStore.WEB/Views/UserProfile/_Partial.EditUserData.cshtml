@@ -1,23 +1,31 @@
-﻿<div class="modal fade" id="modalEditUserProfileData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+﻿@model UserProfileModel
+<div class="modal fade modal-js" id="modalEditUserProfileData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">Редактирование данных</h5>
             </div>
             <div class="modal-body">
-                <form enctype="multipart/form-data">
+                <form id="editUserDataForm" enctype="multipart/form-data">
 
-                    @await Html.PartialAsync("_Partial.EditUserData.Data")
+                    @if(Model.IsChangePassword is false)
+                    {
+                        @await Html.PartialAsync("_Partial.EditUserData.Data",Model)
+                    }
+                    else
+                    {
+                        @await Html.PartialAsync("_Partial.EditUserData.ChangePassword")
+                    }
 
-                    @await Html.PartialAsync("_Partial.EditUserData.ChangePassword")
+
                   
-                    @await Html.PartialAsync("_Partial.EditUserData.FACode")
+                  
 
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Назад</button>
-                <button type="button" class="btn btn-outline-primary">Сохранить</button>
+                <button type="button" id="btnBackFromCreateEditMode" class="btn btn-secondary" data-bs-dismiss="modal">Назад</button>
+                <button type="submit" class="btn btn-outline-primary">Сохранить</button>
             </div>
         </div>
     </div>
