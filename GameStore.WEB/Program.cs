@@ -1,5 +1,7 @@
 using GameStore.BLL.Infrastrcture.Identity;
 using GameStore.BLL.Predefined;
+using GameStore.BLL.Services;
+using GameStore.BLL.Services.AccountServices;
 using GameStore.DAL.Domain;
 using GameStore.DAL.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
@@ -20,21 +22,21 @@ builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
 //Security & Identity Policy Config
 builder.Services.AddAuthorization(config =>
 {
-    PredefinedManager pm = new();
+    PredefinedManager pd = new();
 
     config.AddPolicy(IdentityUserPolicy.role_adminOnly, policy =>
     {
-        policy.RequireRole(pm.AppRole.admin.Name);
+        policy.RequireRole(pd.AppRole.admin.Name);
     });
 
     config.AddPolicy(IdentityUserPolicy.role_UserOnly, policy =>
     {
-        policy.RequireRole(pm.AppRole.user.Name);
+        policy.RequireRole(pd.AppRole.user.Name);
     });
 
     config.AddPolicy(IdentityUserPolicy.role_AdminUser, policy =>
     {
-        policy.RequireRole(pm.AppRole.admin.Name, pm.AppRole.user.Name);
+        policy.RequireRole(pd.AppRole.admin.Name, pd.AppRole.user.Name);
     });
 
 });
@@ -76,6 +78,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(config =>
 //Automapper profiles
 
 //BLL Services
+builder.Services.AddScoped<IAccountService, AccountService>();
 
 //Middleware
 var app = builder.Build();
@@ -84,6 +87,8 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
 }
+app.UseHttpsRedirection();
+app.UseStaticFiles();
 
 var defaultCulture = new CultureInfo("ru-RU");
 defaultCulture.NumberFormat.NumberDecimalSeparator = ",";

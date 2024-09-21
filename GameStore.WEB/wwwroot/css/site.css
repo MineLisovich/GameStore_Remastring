@@ -69,3 +69,9 @@ div.loginRegHeader{
 .form-group {
     margin-top: 10px;
 }
+
+/*VALIDATION STYLE*/
+.validError{
+    color: red;
+    margin-left: 10px;
+}

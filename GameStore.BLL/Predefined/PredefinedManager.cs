@@ -2,6 +2,9 @@
 
 namespace GameStore.BLL.Predefined
 {
+    /// <summary>
+    /// Точка входа к предзаданным значениям
+    /// </summary>
     public class PredefinedManager
     {
         private PdRoles? _roleNames;
