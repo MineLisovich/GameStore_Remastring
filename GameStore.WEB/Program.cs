@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Globalization;
+using System.Net;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -106,6 +107,20 @@ app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
+
+app.UseStatusCodePages(async context =>
+{
+    // var request = context.HttpContext.Request;
+    var response = context.HttpContext.Response;
+    if (response.StatusCode == (int)HttpStatusCode.NotFound)
+    {
+        response.Redirect("/error/NotFoundPage");
+    }
+    if (response.StatusCode == (int)HttpStatusCode.Forbidden)
+    {
+        response.Redirect("/error/ForbiddenResource");
+    }
+});
 
 //EndPoints
 app.MapControllerRoute(

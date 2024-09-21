@@ -1,0 +1,111 @@
+﻿
+@{
+    ViewData["Title"] = $"Профиль - {User.Identity.Name}";
+}
+
+@section js
+{
+   
+}
+<div class="row">
+   @*  USER DATA *@
+    <div class="col">
+        <div class="avatar">
+            <img src="~/img/useravatars/user.jpg" alt="user.jpg" class="rounded-circle" />
+        </div>
+      
+        <div calss="userinfo">
+            <div class="userdata">
+                <h4>@User.Identity.Name</h4>
+                <button type="button" class="btn btn-outline-primary">Редактировать данные</button>
+            </div>
+            <div class="userdata">
+                <h5>Дополнительные функции</h5>
+                <div class="btn-group-vertical mt-2">
+                    <div class="mt-1">
+                        <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="right" title="Вы подтверждаете, что имеете доступ к этому Email">Подтвердить почту</button>
+                        <button type="button" class="btn btn-danger"  data-bs-toggle="tooltip" data-bs-placement="right" title="Вы подтверждаете, что хотите отвязать Email (Так же он автоматически отвяжется, если вы смените Email)">Отвязать почту</button>
+                    </div>
+
+                    <div class ="mt-2">
+                        <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="right" title="Двухфакторная проверка подлинности (2FA). Позволяет обеспечить дополнительную защиту Вашего аккаунта (Для включения этой функции, нужно сначала подтвердить Email)">Включить 2FA</button>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Выключение 2FA влечет за собой угрозу безопасности Вашего аккаунта">Выключить 2FA</button>
+                   </div>
+
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-outline-primary">Сменить пароль</button>
+                    </div>
+
+                    <div class="mt-2">
+                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="После удаление аккаунта Вы потеряете все свои данные.">Удалить аккаунт</button>
+                    </div>
+                </div> 
+            </div>
+        </div>
+    </div>
+@*     ORDER DATA *@
+    <div class="col">
+       <h2>История покупок</h2>
+
+       <div class="ordercart">
+           <h5>Дата покупки: 21/09/2024</h5>
+
+            <div class="ordergameinfo d-flex shadow">
+               <div class="s_gameposter">
+                    <img src="~/img/gamesposters/gameposter.jpg"/>
+               </div>
+                <div class="s_gameinfo">
+                    <h5>Cyberpunk 2077</h5>
+                    <p><b>Цена:</b> 76 BYN</p>
+                    <p><b>Платформа активации:</b> Steam</p>
+                    <p><b>Ключ:</b> XXXX-XXXX-XXXX-XXXX-XXXX</p>
+               </div>
+           </div>
+
+            <div class="ordergameinfo d-flex shadow">
+                <div class="s_gameposter">
+                    <img src="~/img/gamesposters/gameposter.jpg" />
+                </div>
+                <div class="s_gameinfo">
+                    <h5>Cyberpunk 2088</h5>
+                    <p><b>Цена:</b> 767 BYN</p>
+                    <p><b>Платформа активации:</b> Steam</p>
+                    <p><b>Ключ:</b> XXXX-XXXX-XXXX-XXXX-XXXX</p>
+                </div>
+            </div>
+
+       </div>
+
+        <div class="ordercart">
+            <h5>Дата покупки: 20/09/2024</h5>
+
+            <div class="ordergameinfo d-flex shadow">
+                <div class="s_gameposter">
+                    <img src="~/img/gamesposters/gameposter.jpg" />
+                </div>
+                <div class="s_gameinfo">
+                    <h5>Cyberpunk 2077</h5>
+                    <p><b>Цена:</b> 76 BYN</p>
+                    <p><b>Платформа активации:</b> Steam</p>
+                    <p><b>Ключ:</b> XXXX-XXXX-XXXX-XXXX-XXXX</p>
+                </div>
+            </div>
+
+           
+
+        </div>
+
+    </div>
+</div>
+
+<div id="modalWrapper"></div>
+<div id="modalActionWrapper">
+  @*   @await Html.PartialAsync("_Partial.Action.DataNotSaved")
+    @await Html.PartialAsync("_Partial.Action.Warning")
+    @await Html.PartialAsync("_Partial.Action.Success")
+    @await Html.PartialAsync("_Partial.Action.Error") *@
+</div>
+
+<div id="lastActionDataWrapper">
+ @*    @await Html.PartialAsync("_Partial.ActionResult", Model.LastAction) *@
+</div>
