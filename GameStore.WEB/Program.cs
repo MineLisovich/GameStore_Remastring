@@ -1,6 +1,6 @@
+using GameStore.BLL.Infrastrcture.AutomapperProfiles.IdentityProfiles;
 using GameStore.BLL.Infrastrcture.Identity;
 using GameStore.BLL.Predefined;
-using GameStore.BLL.Services;
 using GameStore.BLL.Services.AccountServices;
 using GameStore.DAL.Domain;
 using GameStore.DAL.Entities.Identity;
@@ -9,9 +9,10 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Globalization;
 using System.Net;
+using AutoMapper;
+using GameStore.BLL.Services.UserProfileServices;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -83,9 +84,15 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(config =>
 }).AddEntityFrameworkStores<GsDbContext>().AddDefaultTokenProviders();
 
 //Automapper profiles
+builder.Services.AddAutoMapper(x =>
+{
+    //Identity
+    x.AddProfile<AppUserProfile>();
+});
 
 //BLL Services
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 
 //Middleware
 var app = builder.Build();

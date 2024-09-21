@@ -1,6 +1,8 @@
-﻿
+﻿@model UserProfileModel
 @{
     ViewData["Title"] = $"Профиль - {User.Identity.Name}";
+    PredefinedManager pd = new();
+    bool isUser = User.IsInRole(pd.AppRole.user.Name);
 }
 
 @section js
@@ -11,34 +13,59 @@
    @*  USER DATA *@
     <div class="col">
         <div class="avatar">
-            <img src="~/img/useravatars/user.jpg" alt="user.jpg" class="rounded-circle" />
+            @if(Model.AppUser.AvatarImage.Length == 0)
+            {
+               @*  Аватар пользователя по умолчанию *@
+                <img src="~/img/useravatars/user.jpg" alt="user.jpg" class="rounded-circle" />
+            }
+            else
+            {
+                @Html.Raw("<img class='rounded-circle' src=\"data:image/jpeg;base64,"
+                         + Convert.ToBase64String(Model.AppUser.AvatarImage) + "\" />")
+            }
+           
         </div>
       
         <div calss="userinfo">
             <div class="userdata">
-                <h4>@User.Identity.Name</h4>
+                <h4>@Model.AppUser.Email</h4>
                 <button type="button" id="btnEditProfileData" class="btn btn-outline-primary">Редактировать данные</button>
             </div>
             <div class="userdata">
                 <h5>Дополнительные функции</h5>
                 <div class="btn-group-vertical mt-2">
                     <div class="mt-1">
-                        <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="right" title="Вы подтверждаете, что имеете доступ к этому Email">Подтвердить почту</button>
-                        <button type="button" class="btn btn-danger"  data-bs-toggle="tooltip" data-bs-placement="right" title="Вы подтверждаете, что хотите отвязать Email (Так же он автоматически отвяжется, если вы смените Email)">Отвязать почту</button>
+                        @if(Model.AppUser.EmailConfirmed is false)
+                        {
+                            <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="right" title="Вы подтверждаете, что имеете доступ к этому Email">Подтвердить почту</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Вы подтверждаете, что хотите отвязать Email (Так же он автоматически отвяжется, если вы смените Email)">Отвязать почту</button>
+                        }
                     </div>
 
                     <div class ="mt-2">
-                        <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="right" title="Двухфакторная проверка подлинности (2FA). Позволяет обеспечить дополнительную защиту Вашего аккаунта (Для включения этой функции, нужно сначала подтвердить Email)">Включить 2FA</button>
-                        <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Выключение 2FA влечет за собой угрозу безопасности Вашего аккаунта">Выключить 2FA</button>
+                        @if(Model.AppUser.TwoFactorEnabled is false)
+                        {
+                            <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="right" title="Двухфакторная проверка подлинности (2FA). Позволяет обеспечить дополнительную защиту Вашего аккаунта (Для включения этой функции, нужно сначала подтвердить Email)">Включить 2FA</button>
+                        }
+                        else
+                        {
+                            <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Выключение 2FA влечет за собой угрозу безопасности Вашего аккаунта">Выключить 2FA</button>
+                        }
                    </div>
 
                     <div class="mt-2">
                         <button type="button" class="btn btn-outline-primary">Сменить пароль</button>
                     </div>
 
-                    <div class="mt-2">
-                        <button type="button" class="btn btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="После удаление аккаунта Вы потеряете все свои данные.">Удалить аккаунт</button>
-                    </div>
+                    @if(isUser is true)
+                    {
+                        <div class="mt-2">
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="После удаление аккаунта Вы потеряете все свои данные.">Удалить аккаунт</button>
+                        </div>
+                    }
                 </div> 
             </div>
         </div>
@@ -110,5 +137,5 @@
 </div>
 
 <div id="lastActionDataWrapper">
- @*    @await Html.PartialAsync("_Partial.ActionResult", Model.LastAction) *@
+    @await Html.PartialAsync("_Partial.ActionResult", Model.LastAction)
 </div>

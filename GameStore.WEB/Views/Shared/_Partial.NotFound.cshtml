@@ -1,0 +1,12 @@
+﻿@using GameStore.WEB.Infrastrcture
+@model NotFoundResultModel
+<div class="" style="position:fixed; left:55%;">
+    <h2 class="form-title">@Model.Title</h2>
+    <div class="form-icons">
+      
+    </div>
+    <h3 class="form-subtitle-descr">@Model.Subtitle</h3>
+    <div class="form-button">
+        <a asp-area="@Model.AspArea" asp-controller="@Model.AspController" asp-action="@Model.AspAction" class="button-action">@Model.ATegText</a>
+    </div>
+</div>
