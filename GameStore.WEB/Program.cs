@@ -4,8 +4,10 @@ using GameStore.BLL.Services;
 using GameStore.BLL.Services.AccountServices;
 using GameStore.DAL.Domain;
 using GameStore.DAL.Entities.Identity;
+using GameStore.WEB.Infrastrcture;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Globalization;
@@ -18,6 +20,10 @@ string? connectionString = builder.Configuration.GetConnectionString("DevConnect
 builder.Services.AddDbContext<GsDbContext>(config => config.UseNpgsql(connectionString, x => x.MigrationsAssembly("GameStore.DAL")));
 
 //Config ASP engine
+builder.Services.Configure<RazorViewEngineOptions>(option =>
+{
+    option.ViewLocationExpanders.Add(new PartialLocationExpander());
+});
 builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
 
 //Security & Identity Policy Config

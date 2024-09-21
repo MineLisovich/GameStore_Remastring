@@ -5,7 +5,7 @@
 
 @section js
 {
-   
+    <script src="~/js/UserProfileScripts/UserProfileScript.js"></script>
 }
 <div class="row">
    @*  USER DATA *@
@@ -17,7 +17,7 @@
         <div calss="userinfo">
             <div class="userdata">
                 <h4>@User.Identity.Name</h4>
-                <button type="button" class="btn btn-outline-primary">Редактировать данные</button>
+                <button type="button" id="btnEditProfileData" class="btn btn-outline-primary">Редактировать данные</button>
             </div>
             <div class="userdata">
                 <h5>Дополнительные функции</h5>
@@ -98,12 +98,15 @@
     </div>
 </div>
 
-<div id="modalWrapper"></div>
+<div id="modalWrapper">
+    @* Потом удалить *@
+    @await Html.PartialAsync("_Partial.EditUserData")
+</div>
+
 <div id="modalActionWrapper">
-  @*   @await Html.PartialAsync("_Partial.Action.DataNotSaved")
     @await Html.PartialAsync("_Partial.Action.Warning")
     @await Html.PartialAsync("_Partial.Action.Success")
-    @await Html.PartialAsync("_Partial.Action.Error") *@
+    @await Html.PartialAsync("_Partial.Action.Error") 
 </div>
 
 <div id="lastActionDataWrapper">

@@ -1,0 +1,7 @@
+﻿@using GameStore.WEB.Infrastrcture
+@model UserActionResult
+
+<input id="actionId" value="@Model.Id" type="number" hidden />
+<input id="objId" value="@Model.ObjectId" type="number" hidden />
+<input id="actionResult" checked="@Model.IsSuccess" type="checkbox" hidden />
+<input id="actionDopInfo" value="@Model.DopInfo" type="text" hidden />
