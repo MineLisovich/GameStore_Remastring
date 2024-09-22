@@ -1,9 +1,11 @@
 ﻿using GameStore.BLL.Infrastrcture;
 using GameStore.BLL.Predefined;
 using GameStore.BLL.Services.UserProfileServices;
+using GameStore.DAL.Entities.Identity;
 using GameStore.WEB.Infrastrcture;
 using GameStore.WEB.Models.UserProfileModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Newtonsoft.Json;
@@ -14,9 +16,11 @@ namespace GameStore.WEB.Controllers
     public class UserProfileController : Controller
     {
         private readonly IUserProfileService _userProfileService;
-        public UserProfileController(IUserProfileService userProfileService)
+        private readonly SignInManager<AppUser> _signInManager;
+        public UserProfileController(IUserProfileService userProfileService, SignInManager<AppUser> signInManager)
         {
             _userProfileService = userProfileService;
+            _signInManager = signInManager;
         }
 
         #region PUBLIC METHODS - GET
@@ -36,6 +40,29 @@ namespace GameStore.WEB.Controllers
         #endregion
 
         #region PUBLIC METHODS - POST
+        [HttpPost]
+        public async Task<IActionResult> EditUserProfile(UserProfileModel model)
+        {
+            StandartUserActionTypes actionTypes = new();
+            ResultServiceModel result = await _userProfileService.EditUserProfileDataAsync(model.AppUser, model.uploadAvarar);
+            //Создаём темпдату о результатах действия пользователя
+            TempData = SetTempDataForInfoAboutLastAction(result, actionTypes.Edit.Id);
+            if(result.IsSucceeded is true && model.AppUser.IsChangeEmail is false)
+            {
+                return RedirectToAction(nameof(GetUserProfile));
+            }
+            else if (result.IsSucceeded is true && model.AppUser.IsChangeEmail is true)
+            {
+                //Разлогин. тек. пользователя
+                await _signInManager.SignOutAsync();
+                //Удаляем куки связанные с 2FA (Identity.TwoFactorRememberMe - название по умалчанию)
+                HttpContext.Response.Cookies.Delete("Identity.TwoFactorRememberMe", new CookieOptions { Expires = DateTime.Now.AddDays(-10) });
+                //Удаляем куки 
+                HttpContext.Response.Cookies.Delete("GSCookie", new CookieOptions { Expires = DateTime.Now.AddDays(-10) });
+                return RedirectToAction("Index","Home");
+            }
+              return RedirectToAction(nameof(GetUserProfile));
+        }
         #endregion
 
         #region PRIVATE METHODS

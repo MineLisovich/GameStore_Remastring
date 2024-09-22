@@ -1,6 +1,7 @@
 ﻿using GameStore.BLL.DTO.Identity;
 using GameStore.WEB.Infrastrcture;
 using GameStore.WEB.Models.AccountModels;
+using System.ComponentModel.DataAnnotations;
 
 namespace GameStore.WEB.Models.UserProfileModels
 {
@@ -31,5 +32,7 @@ namespace GameStore.WEB.Models.UserProfileModels
 
         //
         public bool IsChangePassword {  get; set; }
+
+        public IFormFile uploadAvarar { get; set; }
     }
 }

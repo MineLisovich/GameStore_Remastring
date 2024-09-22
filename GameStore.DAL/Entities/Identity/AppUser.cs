@@ -31,6 +31,6 @@ namespace GameStore.DAL.Entities.Identity
         /// <summary>
         /// Роль пользователя
         /// </summary>
-        public required string UserRoleName { get; set; }
+        public string? UserRoleName { get; set; }
     }
 }

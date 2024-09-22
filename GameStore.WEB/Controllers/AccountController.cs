@@ -38,6 +38,10 @@ namespace GameStore.WEB.Controllers
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
+            //Удаляем куки связанные с 2FA (Identity.TwoFactorRememberMe - название по умалчанию)
+            HttpContext.Response.Cookies.Delete("Identity.TwoFactorRememberMe", new CookieOptions { Expires = DateTime.Now.AddDays(-10) });
+            //Удаляем куки 
+            HttpContext.Response.Cookies.Delete("GSCookie", new CookieOptions { Expires = DateTime.Now.AddDays(-10) });
             return RedirectToAction("Index", "Home");
         }
         #endregion

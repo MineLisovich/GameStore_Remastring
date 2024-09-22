@@ -15,7 +15,6 @@ $("#btnEditProfileData").on("click", function () {
 });
 //endregion
 
-
 function GetMessageForModalActionWarning(section) {
     var message = "";
     switch (section) {
@@ -26,3 +25,4 @@ function GetMessageForModalActionWarning(section) {
     }
     return message;
 }
+

@@ -126,6 +126,7 @@ function Exit_FromModalCreateEdit(createEditModalId, formId) {
 }
 //проверка наличия изменнеий в данных и возврат true (разрешения для submit отправки на сервер) либо false (если изменений не было - окно удаляется)
 function CheckDataChanges_FromModalCreateEdit(createEditModalId, formId) {
+    console.log("CheckDataChanges_FromModalCreateEdit");
     //если данные формы не изменены
     if (editData == $("#" + formId).serialize()) {
         //1) очистить стартовые данные
@@ -225,7 +226,9 @@ function AjaxActionGetCreateEditModal(actionType, id, section) {
                     //сохраняем стартовую модель данных формы
                     editData = $(boxId).serialize();
                     console.log("editData: " + editData)
-                    //4) выводим пользователю окно с формой
+                    //4)Доп функции
+                    SettingBehaviorOfModalWindow(boxId);
+                    //5) выводим пользователю окно с формой
                     $(modalId).modal('show');                 
                 break;     
             }

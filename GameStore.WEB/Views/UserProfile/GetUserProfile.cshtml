@@ -29,6 +29,35 @@
             }
             return url;
         }
+        // ШАГ 3. ВЫЗОВ ДОПОЛНИТЕЛЬНЫХ ФУНКЦИЙ В ГЛАВНОМ AJAX МЕТОДЕ
+        function SettingBehaviorOfModalWindow(boxId) {
+            //Превью аватара
+            PreviewAvatar();
+        }
+       
+        //Превью аватара
+        function PreviewAvatar() {
+            const avatarInput = $('#uploadAvarar');
+            const avatarNameInput = $('#AppUser_AvatarName');
+            const avatarPreview = $('#avatarPreview-js');
+            avatarInput.on('change', (e) => {
+                const file = avatarInput[0].files[0];
+                const reader = new FileReader();
+
+                reader.onload = (event) => {
+                    const imageDataUrl = event.target.result;
+                    const img = $('<img >').attr('src', imageDataUrl);
+                    img.css({ 'border-radius': '50%', 'border': '1px solid black'});
+                    avatarPreview.empty().append(img);
+
+                    // Fill in the image name automatically
+                    const fileName = file.name;
+                    avatarNameInput.val(fileName);
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
     </script>
 }
 <div class="row">

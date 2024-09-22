@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using GameStore.BLL.DTO.Identity;
+using GameStore.BLL.Infrastrcture;
 using GameStore.DAL.Domain;
 using GameStore.DAL.Entities.Identity;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameStore.BLL.Services.UserProfileServices
@@ -22,6 +24,43 @@ namespace GameStore.BLL.Services.UserProfileServices
 
             AppUserDTO userDTO = _mapper.Map<AppUserDTO>(user);
             return userDTO;     
+        }
+
+        public async Task<ResultServiceModel> EditUserProfileDataAsync(AppUserDTO userDTO, IFormFile uploadAvarar)
+        {
+            ResultServiceModel result = new();
+            AppUser user = await _context.AppUsers.Where(x=>x.Id == userDTO.Id).FirstOrDefaultAsync();
+            if(uploadAvarar is not null)
+            {
+                byte[] imageData = null;
+                // считываем переданный файл в массив байтов
+                using (var stream = uploadAvarar.OpenReadStream())
+                using (var binaryReader = new BinaryReader(stream))
+                {
+                    imageData = binaryReader.ReadBytes((int)uploadAvarar.Length);
+                }
+                user.AvatarImage = imageData;
+                user.AvatarName = uploadAvarar.FileName;
+               
+            }
+            if(user.Email != userDTO.Email && userDTO.IsChangeEmail is true)
+            {
+                user.Email = userDTO.Email;
+                user.NormalizedEmail = userDTO.Email.ToUpper();
+                user.UserName = userDTO.Email;
+                user.NormalizedUserName = userDTO.Email.ToUpper();
+                user.EmailConfirmed = false;
+                user.TwoFactorEnabled = false;
+            }
+
+            try
+            {
+                _context.AppUsers.Update(user);
+                await _context.SaveChangesAsync();
+            }
+            catch { result.IsSucceeded = false; result.ErrorMes = "Ошибка"; return result; }
+            result.IsSucceeded = true;
+            return result;
         }
     }
 }

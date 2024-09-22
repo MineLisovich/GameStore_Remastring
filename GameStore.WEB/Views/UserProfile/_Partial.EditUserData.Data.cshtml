@@ -1,15 +1,28 @@
 ﻿@model UserProfileModel
 
 <div class="form-group">
-    <div class="avatar">
-        <img src="~/img/useravatars/user.jpg" alt="user.jpg" class="rounded-circle" />
+    <div class="avatar" id="avatarPreview-js">
+        @if (Model.AppUser.AvatarImage.Length == 0)
+        {
+            @*  Аватар пользователя по умолчанию *@
+            <img src="~/img/useravatars/user.jpg" alt="user.jpg" class="rounded-circle" />
+        }
+        else
+        {
+            @Html.Raw("<img class='rounded-circle' src=\"data:image/jpg;base64,"
+                     + Convert.ToBase64String(Model.AppUser.AvatarImage) + "\" />")
+        }
     </div>
-    <label for="img">Сменить аватар:</label>
-    <input id="img" type="file" class="form-control" accept="image/jpeg" />
+    <label>Сменить аватар:</label>
+    <input asp-for=uploadAvarar  type="file" class="form-control" accept=".jpg" />
+    <input asp-for=AppUser.AvatarName type="text" class="form-control" readonly hidden/>
     <span class="validError"></span>
 </div>
 <div class="form-group">
     <label asp-for="AppUser.Email">Email:</label>
     <input asp-for=AppUser.Email type="email" class="form-control" aria-describedby="emailHelp" placeholder="example@gmail.com" />
     <span asp-validation-for="AppUser.Email" class="validError"></span>
+   
+    <label asp-for=AppUser.IsChangeEmail>Вы подтверждаете что хотите изменить Email</label>
+    <input asp-for=AppUser.IsChangeEmail type="checkbox"  />
 </div>
