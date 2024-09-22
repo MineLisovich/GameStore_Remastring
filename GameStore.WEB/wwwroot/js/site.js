@@ -98,7 +98,7 @@ function AddHandlerClickForButtonsOfActionModals(createEditModalId, areaName) {
     //инициализация глобальной переменной
     //(например, для модуля профиля пользователя - moduleName == "profile")
     moduleName = areaName;
-
+    console.log("AddHandlerClickForButtonsOfActionModals- " + "createEditModalId: " + createEditModalId + " areaName: " + areaName)
     ////----------(1)------------MODAL DataNotSaved
     //1) возврат к несохраненным данным пользователя (действие из модалки DataNotSaved)
     $("#btnReturnToUnsavedData").on("click", () => ReturnToUnsavedData_FromModalDataNotSaved(createEditModalId));
@@ -150,6 +150,8 @@ function AddHandlerShownModalForCreateEditModal(createEditModalId, formId) {
     //проверка наличия несохраненных изменений
     //важно: обработчик вещаем на контейнер модальных окон (modalWrapper),
     //так как модалкa CreateEdit на момент создания страницы отсутствует
+    console.log("AddHandlerShownModalForCreateEditModal - " + "createEditModalId: " + createEditModalId +" formId: "+ formId);
+
     $('#modalWrapper').on('shown.bs.modal', function (event) {
         //если начата работа с данными пользователя (нового или уже существующего)
         if ($(".modal-js").attr("id") == createEditModalId) {
