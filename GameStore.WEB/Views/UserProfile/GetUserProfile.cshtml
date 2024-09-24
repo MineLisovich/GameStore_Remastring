@@ -90,22 +90,22 @@
                     <div class="mt-1">
                         @if(Model.AppUser.EmailConfirmed is false)
                         {
-                            <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="right" title="Вы подтверждаете, что имеете доступ к этому Email">Подтвердить почту</button>
+                            <a  asp-area="" asp-controller="UserProfile" asp-action="ConfirmEmailStepOne" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="right" title="Вы подтверждаете, что имеете доступ к этому Email">Подтвердить почту</a>
                         }
                         else
                         {
-                            <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Вы подтверждаете, что хотите отвязать Email (Так же он автоматически отвяжется, если вы смените Email)">Отвязать почту</button>
+                            <a asp-area="" asp-controller="UserProfile" asp-action="UnlinkEmail" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Вы подтверждаете, что хотите отвязать Email (Так же он автоматически отвяжется, если вы смените Email)">Отвязать почту</a>
                         }
                     </div>
 
                     <div class ="mt-2">
                         @if(Model.AppUser.TwoFactorEnabled is false)
                         {
-                            <button type="button" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="right" title="Двухфакторная проверка подлинности (2FA). Позволяет обеспечить дополнительную защиту Вашего аккаунта (Для включения этой функции, нужно сначала подтвердить Email)">Включить 2FA</button>
+                            <a href="#" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="right" title="Двухфакторная проверка подлинности (2FA). Позволяет обеспечить дополнительную защиту Вашего аккаунта (Для включения этой функции, нужно сначала подтвердить Email)">Включить 2FA</a>
                         }
                         else
                         {
-                            <button type="button" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Выключение 2FA влечет за собой угрозу безопасности Вашего аккаунта">Выключить 2FA</button>
+                            <a href="#" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Выключение 2FA влечет за собой угрозу безопасности Вашего аккаунта">Выключить 2FA</a>
                         }
                    </div>
 

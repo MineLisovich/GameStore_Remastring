@@ -39,7 +39,7 @@
         /// <summary>
         /// Отвязка почты
         /// </summary>
-        public readonly UserActionResult UntieEmail = new() { Id = 7, Name = "Отвязка почты" };
+        public readonly UserActionResult UnlinkEmail = new() { Id = 7, Name = "Отвязка почты" };
 
         /// <summary>
         /// Включить 2fa

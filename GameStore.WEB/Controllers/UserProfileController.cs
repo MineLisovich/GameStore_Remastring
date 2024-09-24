@@ -1,5 +1,7 @@
-﻿using GameStore.BLL.Infrastrcture;
+﻿using GameStore.BLL.DTO.Identity;
+using GameStore.BLL.Infrastrcture;
 using GameStore.BLL.Predefined;
+using GameStore.BLL.Services.EmailService;
 using GameStore.BLL.Services.UserProfileServices;
 using GameStore.DAL.Entities.Identity;
 using GameStore.WEB.Infrastrcture;
@@ -17,15 +19,19 @@ namespace GameStore.WEB.Controllers
     {
         private readonly IUserProfileService _userProfileService;
         private readonly SignInManager<AppUser> _signInManager;
-        public UserProfileController(IUserProfileService userProfileService, SignInManager<AppUser> signInManager)
+        private readonly UserManager<AppUser> _userManager;
+        private readonly IEmailService _emailService;
+        public UserProfileController(IUserProfileService userProfileService, SignInManager<AppUser> signInManager, UserManager<AppUser> userManager, IEmailService emailService)
         {
             _userProfileService = userProfileService;
             _signInManager = signInManager;
+            _userManager = userManager;
+            _emailService = emailService;
         }
 
         #region PUBLIC METHODS - GET
         [HttpGet]
-        public async Task <IActionResult> GetUserProfile()
+        public async Task<IActionResult> GetUserProfile()
         {
             UserProfileModel model = await CreateShowUserProfileModel(TempData);
             return View(model);
@@ -37,8 +43,59 @@ namespace GameStore.WEB.Controllers
             UserProfileModel model = await CreateDataUserProfileModel(userId, isChangePassword);
             return PartialView("_Partial.EditUserData", model);
         }
-        #endregion
 
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmailStepOne()
+        {
+            ResultServiceModel result = new();
+            StandartUserActionTypes actionTypes = new();
+            AppUserDTO currentUser = await _userProfileService.GetUserDataByEmailAsync(User.Identity.Name);
+            if (currentUser is null)
+            {
+                result.IsSucceeded = false;
+                result.ErrorMes = "При отправке сообщения на указанную почту произошла ошибка";
+                TempData = SetTempDataForInfoAboutLastAction(result, actionTypes.СonfirmEmail.Id);
+                return RedirectToAction(nameof(GetUserProfile));
+            }
+
+            string code = await _userManager.GenerateEmailConfirmationTokenAsync(currentUser);
+            string callbackUrl = Url.Action("ConfirmEmailStepTwo", "UserProfile", new {userId = currentUser.Id, code = code}, protocol: HttpContext.Request.Scheme);
+
+            try
+            {
+                string plainTextBody = $"Please confirm your email by PET PROJECT";
+                string htmlBody = $"Для потдтверждение почты просто перейдите по этой ссылке: <a href='{callbackUrl}'>link</a>";
+                await _emailService.SendEmailAsync(currentUser.Email, plainTextBody, htmlBody);
+            }
+            catch 
+            {
+                result.IsSucceeded = false;
+                result.ErrorMes = "При отправке сообщения на указанную почту произошла ошибка";
+                TempData = SetTempDataForInfoAboutLastAction(result, actionTypes.СonfirmEmail.Id);
+                return RedirectToAction(nameof(GetUserProfile));
+            }
+            result.IsSucceeded = true;
+            TempData = SetTempDataForInfoAboutLastAction(result, actionTypes.СonfirmEmail.Id);
+            return RedirectToAction(nameof(GetUserProfile));
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmailStepTwo(string userId, string code)
+        {  
+            ResultServiceModel result = await _userProfileService.ConfirmEmailAsync(userId, code);
+            return RedirectToAction(nameof(GetUserProfile));
+        }
+
+        [HttpGet]
+        public async Task <IActionResult> UnlinkEmail()
+        {
+            StandartUserActionTypes actionTypes = new();
+            ResultServiceModel result = await _userProfileService.UnlinkEmailAsync(User.Identity.Name);
+            TempData = SetTempDataForInfoAboutLastAction(result, actionTypes.UnlinkEmail.Id);
+            return RedirectToAction(nameof(GetUserProfile));
+        }
+        #endregion
+        
         #region PUBLIC METHODS - POST
         [HttpPost]
         public async Task<IActionResult> EditUserProfile(UserProfileModel model)
@@ -47,7 +104,7 @@ namespace GameStore.WEB.Controllers
             ResultServiceModel result = await _userProfileService.EditUserProfileDataAsync(model.AppUser, model.uploadAvarar);
             //Создаём темпдату о результатах действия пользователя
             TempData = SetTempDataForInfoAboutLastAction(result, actionTypes.Edit.Id);
-            if(result.IsSucceeded is true && model.AppUser.IsChangeEmail is false)
+            if (result.IsSucceeded is true && model.AppUser.IsChangeEmail is false)
             {
                 return RedirectToAction(nameof(GetUserProfile));
             }
@@ -59,9 +116,9 @@ namespace GameStore.WEB.Controllers
                 HttpContext.Response.Cookies.Delete("Identity.TwoFactorRememberMe", new CookieOptions { Expires = DateTime.Now.AddDays(-10) });
                 //Удаляем куки 
                 HttpContext.Response.Cookies.Delete("GSCookie", new CookieOptions { Expires = DateTime.Now.AddDays(-10) });
-                return RedirectToAction("Index","Home");
+                return RedirectToAction("Index", "Home");
             }
-              return RedirectToAction(nameof(GetUserProfile));
+            return RedirectToAction(nameof(GetUserProfile));
         }
         #endregion
 
@@ -106,23 +163,23 @@ namespace GameStore.WEB.Controllers
             {
                 mainMessage = (result.IsSucceeded) ? "Данные профиля успешно изменены" : "Не удалось изменить данные профиля";
             }
-            else if(actionTypeId == actionTypes.PasswordChange.Id)
+            else if (actionTypeId == actionTypes.PasswordChange.Id)
             {
                 mainMessage = (result.IsSucceeded) ? "Пароль успешно изменён" : "Не удалось изменить пароль";
             }
-            else if(actionTypeId == actionTypes.СonfirmEmail.Id)
+            else if (actionTypeId == actionTypes.СonfirmEmail.Id)
             {
-                mainMessage = (result.IsSucceeded) ? "Email успешно подтверждён" : "Не удалось подтвердить Email";
+                mainMessage = (result.IsSucceeded) ? "На Ваш Email отправленна ссылка для подтвердения" : "Не удалось подтвердить Email";
             }
-            else if(actionTypeId == actionTypes.UntieEmail.Id)
+            else if (actionTypeId == actionTypes.UnlinkEmail.Id)
             {
                 mainMessage = (result.IsSucceeded) ? "Email успешно отвязан" : "Не удалось отвязать Email";
             }
-            else if(actionTypeId == actionTypes.Enable2FA.Id)
+            else if (actionTypeId == actionTypes.Enable2FA.Id)
             {
                 mainMessage = (result.IsSucceeded) ? "2FA Включена" : "Не удалось включить 2FA";
             }
-            else if( actionTypeId == actionTypes.Disable2FA.Id)
+            else if (actionTypeId == actionTypes.Disable2FA.Id)
             {
                 mainMessage = (result.IsSucceeded) ? "2FA Выключена" : "Не удалось выключить 2FA";
             }
@@ -133,7 +190,7 @@ namespace GameStore.WEB.Controllers
             lastAction.DopInfo = mainMessage + ". " + result.ErrorMes;
             TempData["LastAction"] = JsonConvert.SerializeObject(lastAction);
             return TempData;
-           
+
         }
         //private ITempDataDictionary SetTempDataWithUnsavedData(UserProfileModel model)
         //{

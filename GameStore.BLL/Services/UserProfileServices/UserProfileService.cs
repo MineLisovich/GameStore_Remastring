@@ -4,6 +4,7 @@ using GameStore.BLL.Infrastrcture;
 using GameStore.DAL.Domain;
 using GameStore.DAL.Entities.Identity;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace GameStore.BLL.Services.UserProfileServices
@@ -12,25 +13,28 @@ namespace GameStore.BLL.Services.UserProfileServices
     {
         private readonly GsDbContext _context;
         private readonly IMapper _mapper;
-        public UserProfileService(GsDbContext context, IMapper mapper)
+        private readonly UserManager<AppUser> _userManager;
+        public UserProfileService(GsDbContext context, IMapper mapper, UserManager<AppUser> userManager)
         {
             _context = context;
             _mapper = mapper;
+            _userManager = userManager;
         }
+
         public async Task<AppUserDTO> GetUserDataByEmailAsync(string email)
-        {            
-            AppUser user = await _context.AppUsers.Where(x=>x.Email == email).FirstOrDefaultAsync();
-            if (user is null) {  return null; }
+        {
+            AppUser user = await _context.AppUsers.Where(x => x.Email == email).FirstOrDefaultAsync();
+            if (user is null) { return null; }
 
             AppUserDTO userDTO = _mapper.Map<AppUserDTO>(user);
-            return userDTO;     
+            return userDTO;
         }
 
         public async Task<ResultServiceModel> EditUserProfileDataAsync(AppUserDTO userDTO, IFormFile uploadAvarar)
         {
             ResultServiceModel result = new();
-            AppUser user = await _context.AppUsers.Where(x=>x.Id == userDTO.Id).FirstOrDefaultAsync();
-            if(uploadAvarar is not null)
+            AppUser user = await _context.AppUsers.Where(x => x.Id == userDTO.Id).FirstOrDefaultAsync();
+            if (uploadAvarar is not null)
             {
                 byte[] imageData = null;
                 // считываем переданный файл в массив байтов
@@ -41,9 +45,9 @@ namespace GameStore.BLL.Services.UserProfileServices
                 }
                 user.AvatarImage = imageData;
                 user.AvatarName = uploadAvarar.FileName;
-               
+
             }
-            if(user.Email != userDTO.Email && userDTO.IsChangeEmail is true)
+            if (user.Email != userDTO.Email && userDTO.IsChangeEmail is true)
             {
                 user.Email = userDTO.Email;
                 user.NormalizedEmail = userDTO.Email.ToUpper();
@@ -59,6 +63,46 @@ namespace GameStore.BLL.Services.UserProfileServices
                 await _context.SaveChangesAsync();
             }
             catch { result.IsSucceeded = false; result.ErrorMes = "Ошибка"; return result; }
+            result.IsSucceeded = true;
+            return result;
+        }
+
+        public async Task<ResultServiceModel> ConfirmEmailAsync(string userId, string code)
+        {
+            ResultServiceModel result = new();
+            if (userId is null || code is null)
+            { result.IsSucceeded = false; result.ErrorMes = "При продтверждении Email произошла ошибка"; return result; }
+
+            AppUser user = await _userManager.FindByIdAsync(userId);
+            if (user is null)
+            { result.IsSucceeded = false; result.ErrorMes = "При продтверждении Email произошла ошибка"; return result; }
+
+            IdentityResult result_confirmEmail = await _userManager.ConfirmEmailAsync(user, code);
+            if (result_confirmEmail.Succeeded is false)
+            { result.IsSucceeded = false; result.ErrorMes = "При продтверждении Email произошла ошибка"; return result; }
+
+            result.IsSucceeded = true;
+            return result;
+        }
+
+        public async Task<ResultServiceModel> UnlinkEmailAsync(string email)
+        {
+            ResultServiceModel result = new();
+
+            AppUser user = await _context.AppUsers.Where(x => x.Email == email).FirstOrDefaultAsync();
+
+            if (user is null) { result.IsSucceeded = false; result.ErrorMes = "При отвязке Email произошла ошибка"; return result; }
+
+            user.EmailConfirmed = false;
+            try
+            {
+                _context.AppUsers.Update(user);
+                await _context.SaveChangesAsync();
+            }
+
+            catch { result.IsSucceeded = false; result.ErrorMes = "При отвязке Email произошла ошибка"; return result; }
+
+
             result.IsSucceeded = true;
             return result;
         }

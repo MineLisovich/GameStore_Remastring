@@ -8,5 +8,7 @@ namespace GameStore.BLL.Services.UserProfileServices
     {
         Task<AppUserDTO> GetUserDataByEmailAsync(string email);
         Task<ResultServiceModel> EditUserProfileDataAsync(AppUserDTO userDTO, IFormFile uploadAvarar);
+        Task<ResultServiceModel> ConfirmEmailAsync(string userId, string code);
+        Task<ResultServiceModel> UnlinkEmailAsync(string email);
     }
 }

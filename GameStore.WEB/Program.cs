@@ -13,6 +13,7 @@ using System.Globalization;
 using System.Net;
 using AutoMapper;
 using GameStore.BLL.Services.UserProfileServices;
+using GameStore.BLL.Services.EmailService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -93,6 +94,7 @@ builder.Services.AddAutoMapper(x =>
 //BLL Services
 builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 //Middleware
 var app = builder.Build();

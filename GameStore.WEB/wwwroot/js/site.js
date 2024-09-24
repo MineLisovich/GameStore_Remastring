@@ -34,7 +34,7 @@ function ShowModalLastAction() {
             message = (actionResult) ? ("Пароль сохранён. " + actionDopInfo) : ("Не удалось сохранить пароль. " + actionDopInfo);
             break;
         case "6":
-            message = (actionResult) ? ("Email подтверждён. " + actionDopInfo) : ("Не удалось подтвердить Email. " + actionDopInfo);
+            message = (actionResult) ? ("Подтверждение Eamil. " + actionDopInfo) : ("Не удалось подтвердить Email. " + actionDopInfo);
             break;
         case "7":
             message = (actionResult) ? ("Email отвязан. " + actionDopInfo) : ("Не удалось отвязать Email. " + actionDopInfo);
