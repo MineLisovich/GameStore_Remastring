@@ -94,6 +94,15 @@ namespace GameStore.WEB.Controllers
             TempData = SetTempDataForInfoAboutLastAction(result, actionTypes.UnlinkEmail.Id);
             return RedirectToAction(nameof(GetUserProfile));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> TwoFactorManager(bool isEndable)
+        {
+            StandartUserActionTypes actionTypes = new();
+            ResultServiceModel result = await _userProfileService.EnableOrDisable2FAAsync(User.Identity.Name, isEndable);
+            TempData = SetTempDataForInfoAboutLastAction(result, (isEndable is true) ? actionTypes.Enable2FA.Id : actionTypes.Disable2FA.Id);
+            return RedirectToAction(nameof(GetUserProfile));
+        }
         #endregion
         
         #region PUBLIC METHODS - POST

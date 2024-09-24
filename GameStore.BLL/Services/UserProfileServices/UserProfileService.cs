@@ -106,5 +106,35 @@ namespace GameStore.BLL.Services.UserProfileServices
             result.IsSucceeded = true;
             return result;
         }
+
+        public async Task<ResultServiceModel> EnableOrDisable2FAAsync(string email, bool isEnable)
+        {
+
+            ResultServiceModel result = new();
+            AppUser user = await _context.AppUsers.Where(x => x.Email == email).FirstOrDefaultAsync();
+
+            string errorWord = (isEnable is true) ? "включении" : "выключении";
+
+            if (user is null) { result.IsSucceeded = false; result.ErrorMes = "При " + errorWord+ " произошла ошибка"; return result; }
+
+           
+            if(user.EmailConfirmed is true)
+            {
+                user.TwoFactorEnabled = isEnable;
+            }
+            else { result.IsSucceeded = false; result.ErrorMes = "Вы не можете включить 2FA, так вы не подтвердили свою почту"; return result; }
+
+
+            try
+            {
+                _context.AppUsers.Update(user);
+                await _context.SaveChangesAsync();
+            }
+
+            catch { result.IsSucceeded = false; result.ErrorMes = "При " + errorWord + " произошла ошибка"; return result; }
+
+            result.IsSucceeded = true;
+            return result;
+        }
     }
 }
