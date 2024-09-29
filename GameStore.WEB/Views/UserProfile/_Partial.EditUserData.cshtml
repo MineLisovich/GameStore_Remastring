@@ -12,16 +12,15 @@
             <form id="editUserDataForm" asp-controller="UserProfile" asp-action="@actionName" method="post" enctype="multipart/form-data">
 
                 <div class="modal-body">
-              
                     <input asp-for="AppUser.Id" hidden/>
-               @*      <input asp-for="AppUser.Email" /> *@
+        
                     @if(Model.IsChangePassword is false)
                     {
                         @await Html.PartialAsync("_Partial.EditUserData.Data",Model)
                     }
                     else
                     {
-                        @await Html.PartialAsync("_Partial.EditUserData.ChangePassword")
+                        @await Html.PartialAsync("_Partial.EditUserData.ChangePassword", Model)
                     }  
                
             </div>

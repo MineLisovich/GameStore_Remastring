@@ -26,13 +26,23 @@
                 case "edit":
                     url = '@Url.Action("GetPartialWorkOnData", "UserProfile")';
                     break;
+                case "delete":
+                    url = '@Url.Action("DeleteUserAccount", "UserProfile")';
+                    break;
             }
             return url;
         }
         // ШАГ 3. ВЫЗОВ ДОПОЛНИТЕЛЬНЫХ ФУНКЦИЙ В ГЛАВНОМ AJAX МЕТОДЕ
-        function SettingBehaviorOfModalWindow(boxId) {
-            //Превью аватара
-            PreviewAvatar();
+        function SettingBehaviorOfModalWindow(boxId, section) {
+
+            if (section == "userdata") {
+                //Превью аватара
+                PreviewAvatar();
+            }
+            else if (section == "changePass") {
+
+            }
+          
         }
        
         //Превью аватара
@@ -63,7 +73,6 @@
 <div class="row">
    @*  USER DATA *@
     <div class="col">
-        <input asp-for="AppUser.Id" hidden/>
         <input asp-for="AppUser.Email" hidden />
         <div class="avatar">
             @if(Model.AppUser.AvatarImage.Length == 0)
@@ -82,7 +91,7 @@
         <div calss="userinfo">
             <div class="userdata">
                 <h4>@Model.AppUser.Email</h4>
-                <button type="button" id="btnEditProfileData" data-section="userdata" class="btn btn-outline-primary">Редактировать данные</button>
+                <button type="button" data-section="userdata" data-action="edit" class="btn btn-outline-primary js-btn">Редактировать данные</button>
             </div>
             <div class="userdata">
                 <h5>Дополнительные функции</h5>
@@ -110,13 +119,13 @@
                    </div>
 
                     <div class="mt-2">
-                        <button type="button" class="btn btn-outline-primary">Сменить пароль</button>
+                        <button type="button" data-section="changePass" data-action="edit" class="btn btn-outline-primary js-btn">Сменить пароль</button>
                     </div>
 
                     @if(isUser is true)
                     {
                         <div class="mt-2">
-                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="После удаление аккаунта Вы потеряете все свои данные.">Удалить аккаунт</button>
+                            <button type="button" data-section="deleteAccount" data-action="delete" class="btn btn-outline-danger js-btn" data-bs-toggle="tooltip" data-bs-placement="right" title="После удаление аккаунта Вы потеряете все свои данные.">Удалить аккаунт</button>
                         </div>
                     }
                 </div> 

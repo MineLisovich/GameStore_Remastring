@@ -8,11 +8,6 @@ namespace GameStore.WEB.Models.AccountModels
     public class AccountPasswordModel
     {
         /// <summary>
-        /// Почта пользователя
-        /// </summary>
-        public string Email { get; set; }
-
-        /// <summary>
         /// Новый пароль пользователя
         /// </summary>
         [Required(ErrorMessage = "Заполните поле.")]

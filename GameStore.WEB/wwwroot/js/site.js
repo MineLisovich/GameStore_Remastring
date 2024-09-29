@@ -84,7 +84,7 @@ function CallCreateEditModal_FromModalWarning() {
     var id = $(this).data("key");
     var actionType = $(this).data("action");
     var section = $(this).data("section");
-    
+
     console.log("url: " + url);
     console.log("modal: " + modal);
     console.log("actionType: " + actionType);
@@ -151,13 +151,13 @@ function AddHandlerShownModalForCreateEditModal(createEditModalId, formId) {
     //проверка наличия несохраненных изменений
     //важно: обработчик вещаем на контейнер модальных окон (modalWrapper),
     //так как модалкa CreateEdit на момент создания страницы отсутствует
-    console.log("AddHandlerShownModalForCreateEditModal - " + "createEditModalId: " + createEditModalId +" formId: "+ formId);
+    console.log("AddHandlerShownModalForCreateEditModal - " + "createEditModalId: " + createEditModalId + " formId: " + formId);
 
     $('#modalWrapper').on('shown.bs.modal', function (event) {
         //если начата работа с данными пользователя (нового или уже существующего)
         if ($(".modal-js").attr("id") == createEditModalId) {
             //на кнопку "назад" => обработчик с проверкой были ли какие-то изменения данных
-           
+
             $("#" + createEditModalId).find("#btnBackFromCreateEditMode").on("click", () => Exit_FromModalCreateEdit(createEditModalId, formId));
             //на отправку формы изменения / создания пользователя => обработчик с проверкой были ли какие-то изменения данных
             $("#" + formId).on("submit", () => CheckDataChanges_FromModalCreateEdit(createEditModalId, formId));
@@ -182,10 +182,16 @@ function GetData(actionType, id, section) {
                         case "userdata":
                             data = { userId: id };
                             break;
+                        case "changePass":
+                            data = { userId: id, isChangePassword: true };
+                            break;
                     }
-                  
+
                     break;
-              
+                case "delete":
+                    data = { userId: id };
+                    break;
+
             }
             break;
     }
@@ -197,7 +203,7 @@ function GetData(actionType, id, section) {
 
 //Цель => вызов модального окна CREATE & EDIT
 function AjaxActionGetCreateEditModal(actionType, id, section) {
-   
+
     var url = GetURLForAjaxByActionType(actionType);
     GetData(actionType, id, section);
     console.log("AjaxActionGetCreateEditModal - " + "url: " + url);
@@ -227,10 +233,14 @@ function AjaxActionGetCreateEditModal(actionType, id, section) {
                     editData = $(boxId).serialize();
                     console.log("editData: " + editData)
                     //4)Доп функции
-                    SettingBehaviorOfModalWindow(boxId);
+                    SettingBehaviorOfModalWindow(boxId, section);
                     //5) выводим пользователю окно с формой
-                    $(modalId).modal('show');                 
-                break;     
+                    $(modalId).modal('show');
+                    break;
+                case "delete":
+                    location.reload();
+                    break;
+                
             }
         },
         error: function (xhr, ajaxOptions, thrownError) {

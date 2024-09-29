@@ -59,7 +59,7 @@ namespace GameStore.WEB.Controllers
             }
 
             string code = await _userManager.GenerateEmailConfirmationTokenAsync(currentUser);
-            string callbackUrl = Url.Action("ConfirmEmailStepTwo", "UserProfile", new {userId = currentUser.Id, code = code}, protocol: HttpContext.Request.Scheme);
+            string callbackUrl = Url.Action("ConfirmEmailStepTwo", "UserProfile", new { userId = currentUser.Id, code = code }, protocol: HttpContext.Request.Scheme);
 
             try
             {
@@ -67,7 +67,7 @@ namespace GameStore.WEB.Controllers
                 string htmlBody = $"Для потдтверждение почты просто перейдите по этой ссылке: <a href='{callbackUrl}'>link</a>";
                 await _emailService.SendEmailAsync(currentUser.Email, plainTextBody, htmlBody);
             }
-            catch 
+            catch
             {
                 result.IsSucceeded = false;
                 result.ErrorMes = "При отправке сообщения на указанную почту произошла ошибка";
@@ -81,13 +81,13 @@ namespace GameStore.WEB.Controllers
 
         [HttpGet]
         public async Task<IActionResult> ConfirmEmailStepTwo(string userId, string code)
-        {  
+        {
             ResultServiceModel result = await _userProfileService.ConfirmEmailAsync(userId, code);
             return RedirectToAction(nameof(GetUserProfile));
         }
 
         [HttpGet]
-        public async Task <IActionResult> UnlinkEmail()
+        public async Task<IActionResult> UnlinkEmail()
         {
             StandartUserActionTypes actionTypes = new();
             ResultServiceModel result = await _userProfileService.UnlinkEmailAsync(User.Identity.Name);
@@ -103,8 +103,27 @@ namespace GameStore.WEB.Controllers
             TempData = SetTempDataForInfoAboutLastAction(result, (isEndable is true) ? actionTypes.Enable2FA.Id : actionTypes.Disable2FA.Id);
             return RedirectToAction(nameof(GetUserProfile));
         }
+
+        [HttpGet]
+        public async Task<IActionResult> DeleteUserAccount(string userId)
+        {
+            ResultServiceModel result = await _userProfileService.DeleteUserAccountAsync(userId);
+
+            if (result.IsSucceeded is false)
+            {
+                StandartUserActionTypes actionTypes = new();
+                TempData = SetTempDataForInfoAboutLastAction(result, actionTypes.Delete.Id);
+                return RedirectToAction(nameof(GetUserProfile));
+            }
+            else
+            {
+
+                await DeleteCookie(false);
+                return Json(result);
+            }
+        }
         #endregion
-        
+
         #region PUBLIC METHODS - POST
         [HttpPost]
         public async Task<IActionResult> EditUserProfile(UserProfileModel model)
@@ -119,14 +138,17 @@ namespace GameStore.WEB.Controllers
             }
             else if (result.IsSucceeded is true && model.AppUser.IsChangeEmail is true)
             {
-                //Разлогин. тек. пользователя
-                await _signInManager.SignOutAsync();
-                //Удаляем куки связанные с 2FA (Identity.TwoFactorRememberMe - название по умалчанию)
-                HttpContext.Response.Cookies.Delete("Identity.TwoFactorRememberMe", new CookieOptions { Expires = DateTime.Now.AddDays(-10) });
-                //Удаляем куки 
-                HttpContext.Response.Cookies.Delete("GSCookie", new CookieOptions { Expires = DateTime.Now.AddDays(-10) });
-                return RedirectToAction("Index", "Home");
+                await DeleteCookie(true);
             }
+            return RedirectToAction(nameof(GetUserProfile));
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ChangeUserPassword(UserProfileModel model)
+        {
+            StandartUserActionTypes actionTypes = new();
+            ResultServiceModel result = await _userProfileService.ChangeUserPasswordAsync(User.Identity.Name, model.ChangePassword.Password);
+            TempData = SetTempDataForInfoAboutLastAction(result, actionTypes.PasswordChange.Id);
             return RedirectToAction(nameof(GetUserProfile));
         }
         #endregion
@@ -145,9 +167,32 @@ namespace GameStore.WEB.Controllers
             UserProfileModel model = new();
             model.AppUser = await _userProfileService.GetUserDataByEmailAsync(userId);
             model.IsChangePassword = isChangePassword;
+            if (model.IsChangePassword is true)
+            {
+                model.ChangePassword = new();
+            }
+
             return model;
 
         }
+
+
+        private async Task<IActionResult> DeleteCookie(bool isRedirect)
+        {
+            //Разлогин. тек. пользователя
+            await _signInManager.SignOutAsync();
+            //Удаляем куки связанные с 2FA (Identity.TwoFactorRememberMe - название по умалчанию)
+            HttpContext.Response.Cookies.Delete("Identity.TwoFactorRememberMe", new CookieOptions { Expires = DateTime.Now.AddDays(-10) });
+            //Удаляем куки 
+            HttpContext.Response.Cookies.Delete("GSCookie", new CookieOptions { Expires = DateTime.Now.AddDays(-10) });
+
+            if (isRedirect is true)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return Json(null);
+        }
+
         #endregion
 
         #region PRIVATE METHODS - TEMP DATA
@@ -156,12 +201,6 @@ namespace GameStore.WEB.Controllers
             UserActionResult lastAction = (TempData.ContainsKey("LastAction")) ? JsonConvert.DeserializeObject<UserActionResult>((string)TempData["LastAction"]) : new();
             return lastAction;
         }
-
-        //private UserProfileModel GetFromTempData(ITempDataDictionary TempData)
-        //{
-        //    UserProfileModel model = (TempData.ContainsKey("NotSavedModel")) ? JsonConvert.DeserializeObject<UserProfileModel>((string)TempData["NotSavedModel"]) : null;
-        //    return model;
-        //}
 
         private ITempDataDictionary SetTempDataForInfoAboutLastAction(ResultServiceModel result, int actionTypeId)
         {
@@ -192,6 +231,10 @@ namespace GameStore.WEB.Controllers
             {
                 mainMessage = (result.IsSucceeded) ? "2FA Выключена" : "Не удалось выключить 2FA";
             }
+            else if (actionTypeId == actionTypes.Delete.Id)
+            {
+                mainMessage = (result.IsSucceeded) ? "Удаление прошло успешно" : "Не удалось удалить";
+            }
 
             UserActionResult lastAction = new();
             lastAction.Id = actionTypeId;
@@ -201,11 +244,6 @@ namespace GameStore.WEB.Controllers
             return TempData;
 
         }
-        //private ITempDataDictionary SetTempDataWithUnsavedData(UserProfileModel model)
-        //{
-        //    TempData["NotSavedModel"] = JsonConvert.SerializeObject(model);
-        //    return TempData;
-        //}
         #endregion
     }
 }

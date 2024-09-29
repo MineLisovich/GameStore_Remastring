@@ -136,5 +136,39 @@ namespace GameStore.BLL.Services.UserProfileServices
             result.IsSucceeded = true;
             return result;
         }
+   
+        public async Task<ResultServiceModel> ChangeUserPasswordAsync(string email, string password)
+        {
+            ResultServiceModel result = new();
+
+            AppUser user = await _context.AppUsers.Where(x => x.Email == email).FirstOrDefaultAsync();
+            if(user is null) { result.IsSucceeded=false; result.ErrorMes = "Пользователь не найден"; return result; }
+
+            string resetToken = await _userManager.GeneratePasswordResetTokenAsync(user);
+
+            IdentityResult result_changePassword = await _userManager.ResetPasswordAsync(user, resetToken, password);
+            if (!result_changePassword.Succeeded)
+            { result.IsSucceeded = false; result.ErrorMes = "Ошибка. Попробуйте позже"; return result; }
+
+            result.IsSucceeded = true;
+            return result;
+        }
+
+        public async Task<ResultServiceModel> DeleteUserAccountAsync(string email)
+        {
+            ResultServiceModel result = new();
+            AppUser user = await _context.AppUsers.Where(x => x.Email == email).FirstOrDefaultAsync();
+            if (user is null) { result.IsSucceeded = false; result.ErrorMes = "Пользователь не найден"; return result; }
+
+            _context.AppUsers.Remove(user);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch { result.IsSucceeded = false; result.ErrorMes = "Ошибка. Попробуйте позже"; return result; }
+
+            result.IsSucceeded= true;
+            return result;
+        }
     }
 }
