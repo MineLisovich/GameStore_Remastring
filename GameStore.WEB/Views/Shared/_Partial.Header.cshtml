@@ -1,4 +1,10 @@
-﻿<header>
+﻿@using GameStore.BLL.Predefined
+@{
+    PredefinedManager pd = new();
+    bool isAdmin = User.IsInRole(pd.AppRole.admin.Name);
+}
+
+<header>
     <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow m-1 p-0">
         <div class="container-fluid bg-light bg-gradient">
             <div class="logoArea">
@@ -6,33 +12,47 @@
                     <p class="logo">Game</p><p>Store</p>
                 </a>
             </div>
-        
-           
-            
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+
+
+
+            @* <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
-            </button>
+            </button> *@
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between position-absolute top-0 end-0 ">
-                <ul class="navbar-nav flex-grow-1">
-                    @if(User.Identity.IsAuthenticated is false)
-                    {
+
+                @if (User.Identity.IsAuthenticated is false)
+                {
+                    <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login">Вход</a>
                         </li>
-                    }
-                    else
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Logout">Выход</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">UserName</a>
-                        </li>
-                    }
+                    </ul>
+                }
+                else
+                {
+
+                    <div class="btn-group m-2">
+                        <button type="button" class="btn btn-primary btn-lg dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                           @User.Identity.Name
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" asp-area="" asp-controller="UserProfile" asp-action="GetUserProfile">Профиль</a></li>
+                            <li><a class="dropdown-item" href="#">Корзина</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            @if(isAdmin is true)
+                            {
+                                <li><a class="dropdown-item" href="#">Администрирование</a></li>
+                            }
+
+                            <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Logout">Выход</a></li>
+                        </ul>
+                    </div>
+                }
 
 
-                </ul>
+
+
             </div>
         </div>
     </nav>

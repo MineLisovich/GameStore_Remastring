@@ -1,0 +1,203 @@
+﻿@model UserProfileModel
+@{
+    ViewData["Title"] = $"Профиль - {User.Identity.Name}";
+    PredefinedManager pd = new();
+    bool isUser = User.IsInRole(pd.AppRole.user.Name);
+}
+
+@section js
+{
+    <script src="~/js/UserProfileScripts/UserProfileScript.js"></script>
+
+    <script>
+        
+        // ШАГ 1. НАСТРОЙКА ОБЩЕГО ПОВЕДЕНИЯ МОДАЛОК
+        $(document).ready(function () {
+           //НАСТРОЙКА ПОВЕДЕНИЯ МОДАЛОК - Алерты
+           AddHandlerClickForButtonsOfActionModals('modalEditUserProfileData','profile');
+          
+           //НАСТРОЙКА ПОВЕДЕНИЯ МОДАЛОК: Setting modal Create & Edit
+            AddHandlerShownModalForCreateEditModal("modalEditUserProfileData", "editUserDataForm");
+        });
+        // ШАГ 2. НАСТРОЙКА МАРШРУТОВ
+        function GetURLForAjaxByActionType(actionType) {
+            var url = "";
+            switch (actionType) {
+                case "edit":
+                    url = '@Url.Action("GetPartialWorkOnData", "UserProfile")';
+                    break;
+                case "delete":
+                    url = '@Url.Action("DeleteUserAccount", "UserProfile")';
+                    break;
+            }
+            return url;
+        }
+        // ШАГ 3. ВЫЗОВ ДОПОЛНИТЕЛЬНЫХ ФУНКЦИЙ В ГЛАВНОМ AJAX МЕТОДЕ
+        function SettingBehaviorOfModalWindow(boxId, section) {
+
+            if (section == "userdata") {
+                //Превью аватара
+                PreviewAvatar();
+            }
+            else if (section == "changePass") {
+
+            }
+          
+        }
+       
+        //Превью аватара
+        function PreviewAvatar() {
+            const avatarInput = $('#uploadAvarar');
+            const avatarNameInput = $('#AppUser_AvatarName');
+            const avatarPreview = $('#avatarPreview-js');
+            avatarInput.on('change', (e) => {
+                const file = avatarInput[0].files[0];
+                const reader = new FileReader();
+
+                reader.onload = (event) => {
+                    const imageDataUrl = event.target.result;
+                    const img = $('<img >').attr('src', imageDataUrl);
+                    img.css({ 'border-radius': '50%', 'border': '1px solid black'});
+                    avatarPreview.empty().append(img);
+
+                    // Fill in the image name automatically
+                    const fileName = file.name;
+                    avatarNameInput.val(fileName);
+                };
+
+                reader.readAsDataURL(file);
+            });
+        }
+    </script>
+}
+<div class="row">
+   @*  USER DATA *@
+    <div class="col">
+        <input asp-for="AppUser.Email" hidden />
+        <div class="avatar">
+            @if(Model.AppUser.AvatarImage.Length == 0)
+            {
+               @*  Аватар пользователя по умолчанию *@
+                <img src="~/img/useravatars/user.jpg" alt="user.jpg" class="rounded-circle" />
+            }
+            else
+            {
+                @Html.Raw("<img class='rounded-circle' src=\"data:image/jpeg;base64,"
+                         + Convert.ToBase64String(Model.AppUser.AvatarImage) + "\" />")
+            }
+           
+        </div>
+      
+        <div calss="userinfo">
+            <div class="userdata">
+                <h4>@Model.AppUser.Email</h4>
+                <button type="button" data-section="userdata" data-action="edit" class="btn btn-outline-primary js-btn">Редактировать данные</button>
+            </div>
+            <div class="userdata">
+                <h5>Дополнительные функции</h5>
+                <div class="btn-group-vertical mt-2">
+                    <div class="mt-1">
+                        @if(Model.AppUser.EmailConfirmed is false)
+                        {
+                            <a  asp-area="" asp-controller="UserProfile" asp-action="ConfirmEmailStepOne" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="right" title="Вы подтверждаете, что имеете доступ к этому Email">Подтвердить почту</a>
+                        }
+                        else
+                        {
+                            <a asp-area="" asp-controller="UserProfile" asp-action="UnlinkEmail" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Вы подтверждаете, что хотите отвязать Email (Так же он автоматически отвяжется, если вы смените Email)">Отвязать почту</a>
+                        }
+                    </div>
+
+                    <div class ="mt-2">
+                        @if(Model.AppUser.TwoFactorEnabled is false)
+                        {
+                            <a asp-area="" asp-controller="UserProfile" asp-action="TwoFactorManager" asp-route-isEndable="true" class="btn btn-warning" data-bs-toggle="tooltip" data-bs-placement="right" title="Двухфакторная проверка подлинности (2FA). Позволяет обеспечить дополнительную защиту Вашего аккаунта (Для включения этой функции, нужно сначала подтвердить Email)">Включить 2FA</a>
+                        }
+                        else
+                        {
+                            <a asp-area="" asp-controller="UserProfile" asp-action="TwoFactorManager" asp-route-isEndable="false" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="right" title="Выключение 2FA влечет за собой угрозу безопасности Вашего аккаунта">Выключить 2FA</a>
+                        }
+                   </div>
+
+                    <div class="mt-2">
+                        <button type="button" data-section="changePass" data-action="edit" class="btn btn-outline-primary js-btn">Сменить пароль</button>
+                    </div>
+
+                    @if(isUser is true)
+                    {
+                        <div class="mt-2">
+                            <button type="button" data-section="deleteAccount" data-action="delete" class="btn btn-outline-danger js-btn" data-bs-toggle="tooltip" data-bs-placement="right" title="После удаление аккаунта Вы потеряете все свои данные.">Удалить аккаунт</button>
+                        </div>
+                    }
+                </div> 
+            </div>
+        </div>
+    </div>
+@*     ORDER DATA *@
+    <div class="col">
+       <h2>История покупок</h2>
+
+       <div class="ordercart">
+           <h5>Дата покупки: 21/09/2024</h5>
+
+            <div class="ordergameinfo d-flex shadow">
+               <div class="s_gameposter">
+                    <img src="~/img/gamesposters/gameposter.jpg"/>
+               </div>
+                <div class="s_gameinfo">
+                    <h5>Cyberpunk 2077</h5>
+                    <p><b>Цена:</b> 76 BYN</p>
+                    <p><b>Платформа активации:</b> Steam</p>
+                    <p><b>Ключ:</b> XXXX-XXXX-XXXX-XXXX-XXXX</p>
+               </div>
+           </div>
+
+            <div class="ordergameinfo d-flex shadow">
+                <div class="s_gameposter">
+                    <img src="~/img/gamesposters/gameposter.jpg" />
+                </div>
+                <div class="s_gameinfo">
+                    <h5>Cyberpunk 2088</h5>
+                    <p><b>Цена:</b> 767 BYN</p>
+                    <p><b>Платформа активации:</b> Steam</p>
+                    <p><b>Ключ:</b> XXXX-XXXX-XXXX-XXXX-XXXX</p>
+                </div>
+            </div>
+
+       </div>
+
+        <div class="ordercart">
+            <h5>Дата покупки: 20/09/2024</h5>
+
+            <div class="ordergameinfo d-flex shadow">
+                <div class="s_gameposter">
+                    <img src="~/img/gamesposters/gameposter.jpg" />
+                </div>
+                <div class="s_gameinfo">
+                    <h5>Cyberpunk 2077</h5>
+                    <p><b>Цена:</b> 76 BYN</p>
+                    <p><b>Платформа активации:</b> Steam</p>
+                    <p><b>Ключ:</b> XXXX-XXXX-XXXX-XXXX-XXXX</p>
+                </div>
+            </div>
+
+           
+
+        </div>
+
+    </div>
+</div>
+
+<div id="modalWrapper">
+  
+</div>
+
+<div id="modalActionWrapper">
+    @await Html.PartialAsync("_Partial.Action.DataNotSaved")
+    @await Html.PartialAsync("_Partial.Action.Warning")
+    @await Html.PartialAsync("_Partial.Action.Success")
+    @await Html.PartialAsync("_Partial.Action.Error") 
+</div>
+
+<div id="lastActionDataWrapper">
+    @await Html.PartialAsync("_Partial.ActionResult", Model.LastAction)
+</div>

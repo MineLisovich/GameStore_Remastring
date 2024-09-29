@@ -58,20 +58,58 @@ div.loginRegArea {
     margin-right: auto;
     width: 50%;
     margin-top: 5%;
-    padding: 10px;
+    padding: 0.625rem;
     border-right: 1px solid royalblue;
     border-left: 1px solid royalblue;
-    border-radius: 10px;
+    border-radius: 0.625rem;
 }
 div.loginRegHeader{
     text-align:center;
 }
 .form-group {
-    margin-top: 10px;
+    margin-top: 0.625rem;
 }
 
 /*VALIDATION STYLE*/
-.validError{
+.validError {
     color: red;
-    margin-left: 10px;
+    margin-left: 0.625rem;
+}
+
+/*PROFILE STYLE*/
+.avatar, .userdata {
+    margin-top: 1.25rem;
+}
+    .avatar img {
+        width: 16.25rem;
+        height: 15.625rem;
+    }
+
+.userdata {
+    width: 100%;
+}
+
+.ordercart {
+    width: 100%;
+    margin-top: 1.25rem;
+   
+    
+    
+}
+.ordergameinfo {
+    width: 100%;
+    border-right: 1px solid royalblue;
+    border-left: 1px solid royalblue;
+    border-radius: 0.625rem;
+    margin-bottom: 0.625rem;
+    margin-top: 1.25rem;
+}
+.s_gameposter img {
+    width: 9.375rem;
+    height: 11.25rem;
+    border-radius: 0.625rem;
+  
+}
+.s_gameinfo {
+    margin-left: 0.625rem;
 }

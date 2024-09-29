@@ -1,0 +1,34 @@
+﻿@{
+    string actionName = (Model.IsChangePassword is false) ? "EditUserProfile" : "ChangeUserPassword";
+}
+
+@model UserProfileModel
+<div class="modal fade modal-js" id="modalEditUserProfileData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel"> @((Model.IsChangePassword is false) ? "Редактирование данных" : "Смена пароля")</h5>
+            </div>
+            <form id="editUserDataForm" asp-controller="UserProfile" asp-action="@actionName" method="post" enctype="multipart/form-data">
+
+                <div class="modal-body">
+                    <input asp-for="AppUser.Id" hidden/>
+        
+                    @if(Model.IsChangePassword is false)
+                    {
+                        @await Html.PartialAsync("_Partial.EditUserData.Data",Model)
+                    }
+                    else
+                    {
+                        @await Html.PartialAsync("_Partial.EditUserData.ChangePassword", Model)
+                    }  
+               
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnBackFromCreateEditMode" class="btn btn-secondary" data-bs-dismiss="modal">Назад</button>
+                <button type="submit" class="btn btn-outline-primary">Сохранить</button>
+            </div>
+           </form>
+        </div>
+    </div>
+</div>

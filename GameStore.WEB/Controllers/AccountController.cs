@@ -1,5 +1,6 @@
 ﻿using GameStore.BLL.Services;
 using GameStore.BLL.Services.AccountServices;
+using GameStore.BLL.Services.EmailService;
 using GameStore.DAL.Entities.Identity;
 using GameStore.WEB.Models.AccountModels;
 using Microsoft.AspNetCore.Authorization;
@@ -14,11 +15,13 @@ namespace GameStore.WEB.Controllers
         private readonly UserManager<AppUser> _userManager;
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IAccountService _accountService;
-        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IAccountService accountService)
+        private readonly IEmailService _emailService;
+        public AccountController(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IAccountService accountService, IEmailService emailService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _accountService = accountService;
+            _emailService = emailService;
         }
 
         #region PUBLIC METHODS - GET  
@@ -34,10 +37,18 @@ namespace GameStore.WEB.Controllers
         [HttpGet]
         public IActionResult AccountIsBlocked() => View();
 
+        //Страница - 2FA
+        [HttpGet]
+        public IActionResult TwoFactorLogin() => View();
+
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
+            //Удаляем куки связанные с 2FA (Identity.TwoFactorRememberMe - название по умалчанию)
+            HttpContext.Response.Cookies.Delete("Identity.TwoFactorRememberMe", new CookieOptions { Expires = DateTime.Now.AddDays(-10) });
+            //Удаляем куки 
+            HttpContext.Response.Cookies.Delete("GSCookie", new CookieOptions { Expires = DateTime.Now.AddDays(-10) });
             return RedirectToAction("Index", "Home");
         }
         #endregion
@@ -79,7 +90,9 @@ namespace GameStore.WEB.Controllers
             }
             else if(result.RequiresTwoFactor)
             {
-
+                string code = await _userManager.GenerateTwoFactorTokenAsync(user, "Email");
+                await _emailService.SendEmailAsync(user.Email, "Код подверждения для авторизации", code);
+                return RedirectToAction(nameof(TwoFactorLogin));
             }
             else if (result.IsLockedOut)
             {
@@ -90,6 +103,19 @@ namespace GameStore.WEB.Controllers
             ModelState.AddModelError(nameof(model.Password), $"Неверный Логин или Пароль.\nПопыток осталось: {maxFailedAccessAttempts}");
             return View(model);
         }
+
+        [HttpPost]
+        public async Task <IActionResult> TwoFactorLogin (Account2FAModel model)
+        {
+            Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.TwoFactorSignInAsync("Email", model.Code, true, true);
+            if (result.Succeeded)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            ModelState.AddModelError(nameof(Account2FAModel.Code), "Ошибка при входе");
+            return View(model);
+        }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

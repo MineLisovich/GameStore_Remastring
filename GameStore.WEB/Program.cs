@@ -1,14 +1,19 @@
+using GameStore.BLL.Infrastrcture.AutomapperProfiles.IdentityProfiles;
 using GameStore.BLL.Infrastrcture.Identity;
 using GameStore.BLL.Predefined;
-using GameStore.BLL.Services;
 using GameStore.BLL.Services.AccountServices;
 using GameStore.DAL.Domain;
 using GameStore.DAL.Entities.Identity;
+using GameStore.WEB.Infrastrcture;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Globalization;
+using System.Net;
+using AutoMapper;
+using GameStore.BLL.Services.UserProfileServices;
+using GameStore.BLL.Services.EmailService;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +22,10 @@ string? connectionString = builder.Configuration.GetConnectionString("DevConnect
 builder.Services.AddDbContext<GsDbContext>(config => config.UseNpgsql(connectionString, x => x.MigrationsAssembly("GameStore.DAL")));
 
 //Config ASP engine
+builder.Services.Configure<RazorViewEngineOptions>(option =>
+{
+    option.ViewLocationExpanders.Add(new PartialLocationExpander());
+});
 builder.Services.AddControllersWithViews().AddSessionStateTempDataProvider();
 
 //Security & Identity Policy Config
@@ -76,9 +85,16 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(config =>
 }).AddEntityFrameworkStores<GsDbContext>().AddDefaultTokenProviders();
 
 //Automapper profiles
+builder.Services.AddAutoMapper(x =>
+{
+    //Identity
+    x.AddProfile<AppUserProfile>();
+});
 
 //BLL Services
 builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IUserProfileService, UserProfileService>();
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 //Middleware
 var app = builder.Build();
@@ -106,6 +122,20 @@ app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
+
+//app.UseStatusCodePages(async context =>
+//{
+//    // var request = context.HttpContext.Request;
+//    var response = context.HttpContext.Response;
+//    if (response.StatusCode == (int)HttpStatusCode.NotFound)
+//    {
+//        response.Redirect("/error/NotFoundPage");
+//    }
+//    if (response.StatusCode == (int)HttpStatusCode.Forbidden)
+//    {
+//        response.Redirect("/error/ForbiddenResource");
+//    }
+//});
 
 //EndPoints
 app.MapControllerRoute(
