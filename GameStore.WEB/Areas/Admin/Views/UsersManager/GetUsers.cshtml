@@ -1,0 +1,34 @@
+﻿@{
+    ViewData["Title"] = "Управление пользователями";
+}
+
+@section js
+{
+    <script src="~/js/adminarea/userstable.js"></script>
+    <script src="~/js/adminarea/tablelanguage.js"></script>
+     <script>
+         $(document).ready(function () {
+             InitializationUsersTable();
+         });
+     </script>
+}
+
+<h1>Управление пользователями</h1>
+<a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">Вернутся к выбору разделов</a>
+
+
+<div id="tableWrapper" class="row tableWrapper">
+    @await Html.PartialAsync("_Partial.GetUsers.Table")
+</div>
+
+<div id="modalWrapper"></div>
+<div id="modalActionWrapper">
+    @await Html.PartialAsync("_Partial.Action.DataNotSaved")
+    @await Html.PartialAsync("_Partial.Action.Warning")
+    @await Html.PartialAsync("_Partial.Action.Success")
+    @await Html.PartialAsync("_Partial.Action.Error")
+</div>
+
+<div id="lastActionDataWrapper">
+  @*   @await Html.PartialAsync("_Partial.ActionResult", Model.LastAction) *@
+</div>

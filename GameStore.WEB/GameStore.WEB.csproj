@@ -20,4 +20,10 @@
     <ProjectReference Include="..\GameStore.DAL\GameStore.DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Admin\Models\" />
+    <Folder Include="wwwroot\css\datatables\" />
+    <Folder Include="wwwroot\js\datatables\" />
+  </ItemGroup>
+
 </Project>

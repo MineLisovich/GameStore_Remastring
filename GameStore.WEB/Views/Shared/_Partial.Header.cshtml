@@ -42,7 +42,7 @@
                             <li><hr class="dropdown-divider"></li>
                             @if(isAdmin is true)
                             {
-                                <li><a class="dropdown-item" href="#">Администрирование</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="Home" asp-action="Index">Администрирование</a></li>
                             }
 
                             <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Logout">Выход</a></li>
