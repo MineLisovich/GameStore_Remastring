@@ -1,0 +1,41 @@
+﻿
+<div class="modal fade modal-js" id="modalUserData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Создание учётной записи</h5>
+            </div>
+            <form id="userDataForm" asp-controller="" asp-action="" method="post" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label id="Email">Email:</label>
+                        <input id="Email" type="email" class="form-control" aria-describedby="emailHelp" placeholder="example@gmail.com" autocomplete="off" />
+                      @*   <span asp-validation-for="Email" class="validError"></span> *@
+                    </div>
+
+                    <div class="form-group">
+                        <label id="role">Роль:</label>
+                        <select id="role" class="form-control">
+                            <option selected disabled>Выберите роль</option>
+                            <option>Роль 1</option>
+                            <option>Роль 2</option>
+                        </select>
+                        @*   <span asp-validation-for="Email" class="validError"></span> *@
+                    </div>
+
+                    <div class="form-group form-check form-switch">
+                        <input type="checkbox" id="status" class="form-check-input" />
+                        <label class="form-check-label" for="status">Блокировка</label>
+                      
+                      
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnBackFromCreateEditMode" class="btn btn-secondary" data-bs-dismiss="modal">Назад</button>
+                    <button type="submit" class="btn btn-outline-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

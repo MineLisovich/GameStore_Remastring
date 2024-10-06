@@ -21,7 +21,12 @@
     @await Html.PartialAsync("_Partial.GetUsers.Table")
 </div>
 
-<div id="modalWrapper"></div>
+<div id="modalWrapper">
+
+    @* Временно *@
+    @await Html.PartialAsync("_Partial.GetUsers.CreateEditForm")
+
+</div>
 <div id="modalActionWrapper">
     @await Html.PartialAsync("_Partial.Action.DataNotSaved")
     @await Html.PartialAsync("_Partial.Action.Warning")

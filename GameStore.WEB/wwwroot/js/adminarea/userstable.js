@@ -18,6 +18,7 @@
                 action: function () {
                     //var url = '@Url.Action("GetPartialWorkOnDocumentData", "Document")';
                     //AjaxActionDocument("edit", url, 0, false);
+                    $("#modalUserData").modal("show");
                 }
             },
 
@@ -68,6 +69,7 @@
         },
         columns: [
             { width: '5%', data: "id" },
+            { width: '10%', data: "avatar" },
             { data: "email" },
             { data: "status" },
             { data: "lastvisit" }
