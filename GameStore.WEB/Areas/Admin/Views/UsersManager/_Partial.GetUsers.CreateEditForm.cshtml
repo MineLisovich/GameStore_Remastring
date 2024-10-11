@@ -1,0 +1,49 @@
+﻿@model DataUserManagerModel
+@{
+    bool IsCreateMethod = (Model.AppUser.Email is null) ? true : false;
+    string methodName = (IsCreateMethod) ? "CreateUser" : "EditUser";
+}
+
+<div class="modal fade modal-js" id="modalUserManagerData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">@((IsCreateMethod) ? "Создание учётной записи": "Редактирование учётной записи")</h5>
+            </div>
+            <form id="userDataManagerForm" asp-area="Admin" asp-controller="UsersManager" asp-action="@methodName" method="post">
+                <input asp-for=AppUser.Id hidden/>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label asp-for=AppUser.Email>Email:</label>
+                        <input asp-for=AppUser.Email type="email" class="form-control" aria-describedby="emailHelp" placeholder="example@gmail.com" autocomplete="off" />
+                        <span asp-validation-for="AppUser.Email" class="validError"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label asp-for=AppUser.UserRoleName>Роль:</label>
+                        <select asp-for=AppUser.UserRoleName asp-items=Model.SelectListItems_Roles class="form-control"
+                                data-val="true" data-val-required="Поле обязательно для заполнения!">
+                            <option selected disabled>Выберите роль</option>
+                         
+                        </select>
+                        <span asp-validation-for="AppUser.UserRoleName" class="validError"></span>
+                    </div>
+
+                    @if(IsCreateMethod is false)
+                    {
+                        <div class="form-group form-check form-switch">
+                            <input type="checkbox" asp-for=AppUser.IsBanned class="form-check-input" />
+                            <label class="form-check-label" asp-for=AppUser.IsBanned>Блокировка</label>
+                        </div>
+                    }
+          
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="btnBackFromCreateEditMode" class="btn btn-secondary" data-bs-dismiss="modal">Назад</button>
+                    <button type="submit" class="btn btn-outline-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

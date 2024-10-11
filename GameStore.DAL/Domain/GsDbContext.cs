@@ -50,6 +50,7 @@ namespace GameStore.DAL.Domain
                 Email = "admin@test.com",
                 EmailConfirmed = true,
                 UserRoleName = role_admin,
+                CustomUserId = 1,
             };
 
             AppUser user_role_user = new()
@@ -58,6 +59,7 @@ namespace GameStore.DAL.Domain
                 Email = "user@test.com",
                 EmailConfirmed = true,
                 UserRoleName = role_user,
+                CustomUserId = 2,
             };
 
             IdentityResult resultAdd_user_admin = await userManager.CreateAsync(user_role_admin, defPassword);

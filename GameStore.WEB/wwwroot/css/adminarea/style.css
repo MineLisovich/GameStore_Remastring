@@ -1,0 +1,48 @@
+﻿
+.topic {
+    width: 15.625rem;
+    margin-left: auto;
+    margin-right: auto;
+    transition: box-shadow 0.3s;
+}
+    .topic:hover {
+        box-shadow: 0 0 10px royalblue; /* shadow appears on hover */
+    }
+
+.topicHeader {
+    text-align:center;
+    user-select: none; /* запретить выделение текста */
+    -moz-user-select: none; /* для Mozilla Firefox */
+    -webkit-user-select: none; /* для Google Chrome и Safari */
+    -ms-user-select: none; /* для Internet Explorer и Microsoft Edge */
+}
+.topicBtn {
+    margin: 0.938rem;
+}
+.topicBtn a{
+    width:100%;
+}
+.btn-create{
+    background-color:forestgreen;
+}
+.btn-edit {
+    background-color:darkgoldenrod;
+}
+.btn-delete {
+    background-color: darkred;
+}
+.btn-download {
+    background-color:royalblue;
+}
+.btntext{
+    font-size:18px;
+}
+.btnmg {
+    margin-top:40px;
+}
+
+.avatarInTable
+{
+    width: 100px;
+    height:70px;
+}

@@ -1,0 +1,54 @@
+﻿@model ShowUserManagerModel
+
+@functions
+{
+    string GetStingValue(bool objectBool)
+    {
+        return (objectBool) ? "Да" : "Нет";
+    }
+}
+
+<table id="usersTable" class="table table-striped display">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Аватар</th>
+            <th>Email</th>
+            <th>Статус</th>
+            <th>Роль</th>
+            <th>Email подтверждён</th>
+            <th>2FA включена</th>
+            <th>Последнее посещение</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @foreach(var user in Model.AppUsers)
+        {
+
+            <tr>
+                <td>@user.CustomUserId</td>
+
+                @if (user.AvatarImage.Length == 0)
+                {
+                    <td> <img src="~/img/useravatars/user.jpg" class="avatarInTable rounded-circle" /> </td>
+                }
+                else
+                {
+                    <td>
+                        @Html.Raw("<img class='avatarInTable rounded-circle' src=\"data:image/jpeg;base64,"
+                                 + Convert.ToBase64String(user.AvatarImage) + "\" />")
+                    </td>
+                }
+
+                <td>@user.Email</td>
+                <td>@((user.IsBanned is false) ? "Активный" :  $"Заблокирован (до: {user.LockoutEnd.Value.ToString("dd/MM/yyyy HH:mm")})")</td>
+                <td>@user.UserRoleName</td>
+                <th>@GetStingValue(user.EmailConfirmed)</th>
+                <th>@GetStingValue(user.TwoFactorEnabled)</th>
+                <td>@((user.LastVisit.HasValue) ? user.LastVisit.Value.ToString("dd/MM/yyyy"):"Не заходил")</td>
+            </tr>
+        }
+
+    </tbody>
+</table>
