@@ -40,6 +40,9 @@ namespace GameStore.DAL.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
+                    b.Property<long>("CustomUserId")
+                        .HasColumnType("bigint");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasMaxLength(256)
@@ -85,7 +88,6 @@ namespace GameStore.DAL.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.Property<string>("UserRoleName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");

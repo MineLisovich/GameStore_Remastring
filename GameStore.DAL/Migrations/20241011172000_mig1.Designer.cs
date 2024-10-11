@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace GameStore.DAL.Migrations
 {
     [DbContext(typeof(GsDbContext))]
-    [Migration("20240920192622_mig1")]
+    [Migration("20241011172000_mig1")]
     partial class mig1
     {
         /// <inheritdoc />
@@ -42,6 +42,9 @@ namespace GameStore.DAL.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("text");
+
+                    b.Property<long>("CustomUserId")
+                        .HasColumnType("bigint");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -88,7 +91,6 @@ namespace GameStore.DAL.Migrations
                         .HasColumnType("character varying(256)");
 
                     b.Property<string>("UserRoleName")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");

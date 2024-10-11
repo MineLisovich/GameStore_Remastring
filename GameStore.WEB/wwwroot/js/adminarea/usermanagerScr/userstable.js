@@ -16,9 +16,11 @@
                 className: 'btn-create btntext btnmg',
                 enabled: true,
                 action: function () {
-                    //var url = '@Url.Action("GetPartialWorkOnDocumentData", "Document")';
-                    //AjaxActionDocument("edit", url, 0, false);
-                    $("#modalUserData").modal("show");
+
+                    var actionType = "edit";
+                    var section = "";
+                    AjaxActionGetCreateEditModal(actionType, "", section)
+                    $("#modalUserManagerData").modal("show");
                 }
             },
 
@@ -28,13 +30,13 @@
                 className: 'btn-edit btntext btnmg',
                 enabled: false,
                 action: function () {
-                    //var id = table.cell('.selected', 0).data();
-                    //var title = "";
-                    //var message = "Вы уверены, что хотите внести изменения в данные о нормативном документе? ";
-                    //var actionType = "edit";
-                    //PrepareWarningModal(id, title, message, actionType);
-
-                    //$("#modalActionWarning").modal('show');
+                    var id = table.cell('.selected', 2).data();
+                    var title = "";
+                    var message = "Вы уверены, что хотите внести изменения в данные о пользователе? ";
+                    var actionType = "edit";
+                    var section = "";
+                    PrepareWarningModal(id, title, message, actionType, section)
+                    $("#modalActionWarning").modal('show');
                 }
             },
             //Кнопка Удалить
@@ -43,13 +45,13 @@
                 className: 'btn-delete btntext btnmg',
                 enabled: false,
                 action: function () {
-                    //var id = table.cell('.selected', 0).data();
-                    //var title = "Удаление нормативного документа";
-                    //var message = "После удаления восстановить данные будет невозможно";
-                    //var actionType = "delete";
-                    //PrepareWarningModal(id, title, message, actionType);
-
-                    //$("#modalActionWarning").modal('show');
+                    var id = table.cell('.selected', 2).data();
+                    var title = "Удаление пользователя";
+                    var message = "После удаления восстановить данные будет невозможно";
+                    var actionType = "delete";
+                    var section = "";
+                    PrepareWarningModal(id, title, message, actionType, section)
+                    $("#modalActionWarning").modal('show');
                 },
             },
 
@@ -72,6 +74,9 @@
             { width: '10%', data: "avatar" },
             { data: "email" },
             { data: "status" },
+            { data: "role" },
+            { data: "emailConf" },
+            { data: "fa" },
             { data: "lastvisit" }
         ],
       

@@ -1,16 +1,41 @@
-﻿@{
+﻿@model ShowUserManagerModel
+@{
     ViewData["Title"] = "Управление пользователями";
 }
 
 @section js
 {
-    <script src="~/js/adminarea/userstable.js"></script>
     <script src="~/js/adminarea/tablelanguage.js"></script>
+    <script src="~/js/adminarea/usermanagerScr/userstable.js"></script>
+    <script src="~/js/adminarea/usermanagerScr/usermanager.js"></script>
      <script>
-         $(document).ready(function () {
-             InitializationUsersTable();
-         });
-     </script>
+        // ШАГ 1. НАСТРОЙКА ОБЩЕГО ПОВЕДЕНИЯ МОДАЛОК
+        $(document).ready(function () {
+            //Вызов DataTable
+            InitializationUsersTable();
+            //НАСТРОЙКА ПОВЕДЕНИЯ МОДАЛОК - Алерты
+            AddHandlerClickForButtonsOfActionModals('modalUserManagerData', 'userManager');
+
+            //НАСТРОЙКА ПОВЕДЕНИЯ МОДАЛОК: Setting modal Create & Edit
+            AddHandlerShownModalForCreateEditModal("modalUserManagerData", "userDataManagerForm");
+        });
+        // ШАГ 2. НАСТРОЙКА МАРШРУТОВ
+        function GetURLForAjaxByActionType(actionType) {
+            var url = "";
+            switch (actionType) {
+                case "edit":
+                    url = '@Url.Action("GetPartialWorkOnData", "UsersManager")';
+                    break;
+                case "delete":
+                    url = '@Url.Action("DeleteUserAccount", "UsersManager")';
+                    break;
+            }
+            return url;
+        }
+        // ШАГ 3. ВЫЗОВ ДОПОЛНИТЕЛЬНЫХ ФУНКЦИЙ В ГЛАВНОМ AJAX МЕТОДЕ
+        function SettingBehaviorOfModalWindow(boxId, section) { }
+
+    </script>
 }
 
 <h1>Управление пользователями</h1>
@@ -18,13 +43,10 @@
 
 
 <div id="tableWrapper" class="row tableWrapper">
-    @await Html.PartialAsync("_Partial.GetUsers.Table")
+    @await Html.PartialAsync("_Partial.GetUsers.Table", Model)
 </div>
 
 <div id="modalWrapper">
-
-    @* Временно *@
-    @await Html.PartialAsync("_Partial.GetUsers.CreateEditForm")
 
 </div>
 <div id="modalActionWrapper">
@@ -35,5 +57,5 @@
 </div>
 
 <div id="lastActionDataWrapper">
-  @*   @await Html.PartialAsync("_Partial.ActionResult", Model.LastAction) *@
+    @await Html.PartialAsync("_Partial.ActionResult", Model.LastAction)
 </div>

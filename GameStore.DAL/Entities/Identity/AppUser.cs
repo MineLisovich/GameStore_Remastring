@@ -29,8 +29,13 @@ namespace GameStore.DAL.Entities.Identity
 
         //Технические поля
         /// <summary>
-        /// Роль пользователя
+        /// Роль пользователя - контролируется в ручную (чтобы избежать лишних действий для отображения роли пользователя в таблице)
         /// </summary>
         public string? UserRoleName { get; set; }
+
+        /// <summary>
+        /// Пользовательский Id - нужен для отображения в области Админ (чтобы не видеть guid)
+        /// </summary>
+        public long CustomUserId { get; set; }
     }
 }

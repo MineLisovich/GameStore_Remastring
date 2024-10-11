@@ -186,12 +186,20 @@ function GetData(actionType, id, section) {
                             data = { userId: id, isChangePassword: true };
                             break;
                     }
-
                     break;
                 case "delete":
                     data = { userId: id };
                     break;
-
+            }
+            break;
+        case "userManager":
+            switch (actionType) {
+                case "edit":
+                    data = { userId: id };
+                    break;
+                case "delete":
+                    data = { userId: id };
+                    break;
             }
             break;
     }
@@ -240,7 +248,7 @@ function AjaxActionGetCreateEditModal(actionType, id, section) {
                 case "delete":
                     location.reload();
                     break;
-                
+
             }
         },
         error: function (xhr, ajaxOptions, thrownError) {
