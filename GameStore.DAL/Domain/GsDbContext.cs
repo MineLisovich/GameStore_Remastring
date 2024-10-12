@@ -1,4 +1,6 @@
-﻿using GameStore.DAL.Entities.Identity;
+﻿using GameStore.DAL.Entities.Dictionaries;
+using GameStore.DAL.Entities.Games;
+using GameStore.DAL.Entities.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +17,17 @@ namespace GameStore.DAL.Domain
         #region DB SETS
         //-- Identity
         public DbSet<AppUser> AppUsers { get; set; }
+
+        //-- Dictionaries
+        public DbSet<Genre> Genres { get; set; }
+        public DbSet<GamePlatform> GamePlatforms { get; set; }
+        public DbSet<GameDeveloper> GameDevelopers { get; set; }
+        public DbSet<GameLabel> GameLabels { get; set; }
+
+        //-- Games
+        public DbSet<Game> Games { get; set; }
+        public DbSet<GameKey> GameKeys { get; set; }
+        public DbSet<GameScreenshot> GameScreenshots { get; set; }
         #endregion
 
         protected override void OnModelCreating(ModelBuilder builder)
@@ -22,17 +35,32 @@ namespace GameStore.DAL.Domain
             base.OnModelCreating(builder);
 
             #region DB CREATION
-            ///
-            /// --Identity
-            /// 
+            
+            //--Identity
             builder.Entity<AppUser>().ToTable("Users");
+          
+            //-- Dictionaries
+            builder.Entity<Genre>().ToTable("Dictionaries_Genres");
+            builder.Entity<GamePlatform>().ToTable("Dictionaries_GamePlatforms");
+            builder.Entity<GameDeveloper>().ToTable("Dictionaries_GameDevelopers");
+            builder.Entity<GameLabel>().ToTable("Dictionaries_GameLabels");
+
+            //-- Games
+            builder.Entity<Game>().ToTable("Games_Games");
+            builder.Entity<GameKey>().ToTable("Games_Keys");
+            builder.Entity<GameScreenshot>().ToTable("Games_Screenshots");
             #endregion
 
             #region SEED DATA
-            ///
-            /// -- Identity Roles  
-            /// 
+
+            // -- Identity
             builder.Entity<IdentityRole>().HasData(new Predefined.Identity.PdRoles().RoleList);
+
+            //-- Dictionaries
+            builder.Entity<Genre>().HasData(new Predefined.Dictionaries.PdGenres().ListGanres);
+            builder.Entity<GamePlatform>().HasData(new Predefined.Dictionaries.PdGamePlatforms().ListGamePlatforms);
+            builder.Entity<GameDeveloper>().HasData(new Predefined.Dictionaries.PdGameDevelopers().ListGameDevelopers);
+            builder.Entity<GameLabel>().HasData(new Predefined.Dictionaries.PdGameLabels().Listlabels);
             #endregion
         }
 

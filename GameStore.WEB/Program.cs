@@ -10,11 +10,11 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
-using System.Net;
-using AutoMapper;
 using GameStore.BLL.Services.UserProfileServices;
 using GameStore.BLL.Services.EmailService;
 using GameStore.BLL.Services.UserManagerServices;
+using GameStore.BLL.Infrastrcture.AutomapperProfiles.DictionariesProfiles;
+using GameStore.BLL.Infrastrcture.AutomapperProfiles.GamesProfiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -90,6 +90,17 @@ builder.Services.AddAutoMapper(x =>
 {
     //Identity
     x.AddProfile<AppUserProfile>();
+    
+    //Dictionaries
+    x.AddProfile<GameDeveloperProfile>();
+    x.AddProfile<GameLabelProfile>();
+    x.AddProfile<GamePlatformProfile>();
+    x.AddProfile<GenreProfile>();
+
+    //Games
+    x.AddProfile<GameProfile>();
+    x.AddProfile<GameKeyProfile>();
+    x.AddProfile<GameScreenshotProfile>();
 });
 
 //BLL Services
