@@ -1,0 +1,57 @@
+﻿@model ShowDictionatyModel
+
+<table id="dictionariesTable" class="table table-striped display">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Наименование</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        @if(Model.Genres.Count != 0)
+        {
+            @foreach (var obj in Model.Genres)
+            {
+                <tr>
+                    <td>@obj.Id</td>
+                    <td>@obj.Name</td>
+                </tr>
+            }
+        }
+        else if (Model.GameDevelopers.Count != 0)
+        {
+            @foreach (var obj in Model.GameDevelopers)
+            {
+                <tr>
+                    <td>@obj.Id</td>
+                    <td>@obj.Name</td>
+                </tr>
+            }
+        }
+        else if (Model.GamePlatforms.Count != 0)
+        {
+            @foreach (var obj in Model.GamePlatforms)
+            {
+                <tr>
+                    <td>@obj.Id</td>
+                    <td>@obj.Name</td>
+                </tr>
+            }
+        }
+
+        else if (Model.GameLabels.Count != 0)
+        {
+            @foreach (var obj in Model.GameLabels)
+            {
+                <tr>
+                    <td>@obj.Id</td>
+                    <td>@obj.Name</td>
+                </tr>
+            }
+        }
+
+       
+       
+    </tbody>
+</table>

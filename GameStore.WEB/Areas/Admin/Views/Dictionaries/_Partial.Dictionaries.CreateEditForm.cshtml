@@ -1,0 +1,72 @@
+﻿@model DataDictionaryModel
+
+@{
+    DictionariesTypes dictionariesTypes = new();
+}
+
+<div class="modal fade modal-js" id="modalDictionaryData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">@((Model.IsCreateMode) ? $"Добавление {Model.TitleNameForm}" 
+                                                                                        : $"Редактирование {Model.TitleNameForm}")</h5>
+            </div>
+            <form id="dictionaryDataForm" asp-area="Admin" asp-controller="Dictionaries" asp-action="CreateEditDictionary" method="post">
+              
+                <input asp-for=SectionOrderId  readonly hidden/>
+                <input asp-for=IsCreateMode readonly hidden />
+               
+                @if (Model.SectionOrderId == dictionariesTypes.d_genre.OrderId)
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input asp-for=Genre.Id readonly hidden/>
+                            <label asp-for=Genre.Name>Наименование:</label>
+                            <input asp-for=Genre.Name type="text" class="form-control" placeholder="Введите наименование @Model.TitleNameForm.ToLower()" autocomplete="off" />
+                            <span asp-validation-for="Genre.Name" class="validError"></span>
+                        </div>
+                    </div>
+                }
+                else if (Model.SectionOrderId == dictionariesTypes.d_gamDev.OrderId)
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input asp-for=GameDeveloper.Id readonly hidden />
+                            <label asp-for=GameDeveloper.Name>Наименование:</label>
+                            <input asp-for=GameDeveloper.Name type="text" class="form-control" placeholder="Введите наименование @Model.TitleNameForm.ToLower()" autocomplete="off" />
+                            <span asp-validation-for="GameDeveloper.Name" class="validError"></span>
+                        </div>
+                    </div>
+                }
+                else if (Model.SectionOrderId == dictionariesTypes.d_gamPlat.OrderId)
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input asp-for=GamePlatform.Id readonly hidden />
+                            <label asp-for=GamePlatform.Name>Наименование:</label>
+                            <input asp-for=GamePlatform.Name type="text" class="form-control" placeholder="Введите наименование @Model.TitleNameForm.ToLower()" autocomplete="off" />
+                            <span asp-validation-for="GamePlatform.Name" class="validError"></span>
+                        </div>
+                    </div>
+                }
+                else if (Model.SectionOrderId == dictionariesTypes.d_gamLabel.OrderId)
+                {
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <input asp-for=GameLabel.Id readonly hidden />
+                            <label asp-for=GameLabel.Name>Наименование:</label>
+                            <input asp-for=GameLabel.Name type="text" class="form-control" placeholder="Введите наименование @Model.TitleNameForm.ToLower()" autocomplete="off" />
+                            <span asp-validation-for="GameLabel.Name" class="validError"></span>
+                        </div>
+                    </div>
+                }
+
+
+                <div class="modal-footer">
+                    <button type="button" id="btnBackFromCreateEditMode" class="btn btn-secondary" data-bs-dismiss="modal">Назад</button>
+                    <button type="submit" class="btn btn-outline-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

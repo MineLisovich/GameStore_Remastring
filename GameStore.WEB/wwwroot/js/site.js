@@ -202,6 +202,17 @@ function GetData(actionType, id, section) {
                     break;
             }
             break;
+        case "dictionaries":
+            switch (actionType) {
+                case "edit":
+                    data = { id: id, sectionName: section };
+                    break;
+                case "delete":
+                    data = { id: id, sectionName: section };
+                    break;
+            }
+            break;
+  
     }
     return data;
 }
@@ -213,7 +224,6 @@ function GetData(actionType, id, section) {
 function AjaxActionGetCreateEditModal(actionType, id, section) {
 
     var url = GetURLForAjaxByActionType(actionType);
-    GetData(actionType, id, section);
     console.log("AjaxActionGetCreateEditModal - " + "url: " + url);
     console.log("AjaxActionGetCreateEditModal - " + "actionType: " + actionType);
     console.log("AjaxActionGetCreateEditModal - " + "id: " + id);

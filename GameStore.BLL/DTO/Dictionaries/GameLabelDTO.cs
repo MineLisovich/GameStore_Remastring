@@ -1,4 +1,5 @@
 ﻿using GameStore.BLL.DTO.Games;
+using System.ComponentModel.DataAnnotations;
 
 namespace GameStore.BLL.DTO.Dictionaries
 {
@@ -13,6 +14,7 @@ namespace GameStore.BLL.DTO.Dictionaries
         /// <summary>
         /// Наименование ярлыка
         /// </summary>
+        [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         public required string Name { get; set; }
 
         /// <summary>

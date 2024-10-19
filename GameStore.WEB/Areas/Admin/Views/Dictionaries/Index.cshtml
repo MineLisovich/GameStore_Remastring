@@ -1,0 +1,91 @@
+﻿@model ShowDictionatyModel
+@{
+    ViewData["Title"] = "Словари";
+    DictionariesTypes types = new();
+}
+
+@section js{
+    <script src="~/js/adminarea/dictionaries/dictionariesDT.js"></script> 
+    <script src="~/js/adminarea/tablelanguage.js"></script>
+    <script src="~/js/adminarea/dictionaries/dictionariesManager.js"></script>
+
+    <script>
+        // ШАГ 1. НАСТРОЙКА ОБЩЕГО ПОВЕДЕНИЯ МОДАЛОК
+        $(document).ready(function () {
+           
+            //НАСТРОЙКА ПОВЕДЕНИЯ МОДАЛОК - Алерты
+            AddHandlerClickForButtonsOfActionModals('modalDictionaryData', 'dictionaries');
+
+            //НАСТРОЙКА ПОВЕДЕНИЯ МОДАЛОК: Setting modal Create & Edit
+            AddHandlerShownModalForCreateEditModal("modalDictionaryData", "dictionaryDataForm");
+
+        });
+
+        // ШАГ 2. НАСТРОЙКА МАРШРУТОВ
+        function GetURLForAjaxByActionType(actionType) {
+            var url = "";
+            switch (actionType) {
+                case "edit":
+                     url = '@Url.Action("GetPartialWorkOnData", "Dictionaries")';
+                    break;
+                case "delete":
+                      url = '@Url.Action("DeleteDictionary", "Dictionaries")';
+                    break;
+            }
+            return url;
+        }
+        // ШАГ 3. ВЫЗОВ ДОПОЛНИТЕЛЬНЫХ ФУНКЦИЙ В ГЛАВНОМ AJAX МЕТОДЕ
+        function SettingBehaviorOfModalWindow(boxId, section) { }
+
+        //НАСТРОЙКА ДЛЯ ПОКАЗА ДАННЫХ В DATATABLE
+        function GetUrlFotAjaxActionGetData()
+        {
+           var url = '@Url.Action("GetDataForTable","Dictionaries")';
+           return url;
+        }
+        function SettingsDictionaryDataTable()
+        {
+           //Вызов DataTable
+            InitializationUsersTable();
+        }
+
+    </script>
+}
+<h1>Словари</h1>
+<a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">Вернутся к выбору разделов</a>
+
+<div class="row mt-5">
+    <div class="col-4  ">
+        <div class="d-grid gap-2 col-6 mx-auto">
+
+            @foreach(var btn in types.DictionaryTypesList)
+            {
+                <button type="button" id="d_@btn.OrderId" data-section="@btn.SectionName" class="btn btn-outline-primary js-dictionaryBtn">@btn.RuName</button>
+            }
+           
+        </div>
+      
+    </div>
+    <div class="col borderS">
+        <div id="js-showTable">
+          <h4>Выберите раздел</h4>
+        </div>
+    </div>
+</div>
+
+<div id="modalWrapper">
+
+</div>
+
+<div id="modalActionWrapper">
+    @await Html.PartialAsync("_Partial.Action.DataNotSaved")
+    @await Html.PartialAsync("_Partial.Action.Warning")
+    @await Html.PartialAsync("_Partial.Action.Success")
+    @await Html.PartialAsync("_Partial.Action.Error")
+</div>
+
+<div id="lastActionDataWrapper">
+    @await Html.PartialAsync("_Partial.ActionResult", Model.LastAction)
+</div>
+
+
