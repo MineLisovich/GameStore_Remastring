@@ -1,4 +1,6 @@
-﻿<table id="dictionariesTable" class="table table-striped display">
+﻿@model ShowDictionatyModel
+
+<table id="dictionariesTable" class="table table-striped display">
     <thead>
         <tr>
             <th>Id</th>
@@ -7,21 +9,49 @@
     </thead>
     <tbody>
 
-        <tr>
-            <td>1</td>
-            <td>Наименование 1</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>Наименование 2</td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <td>Наименование 3</td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <td>Наименование 4</td>
-        </tr>
+        @if(Model.Genres.Count != 0)
+        {
+            @foreach (var obj in Model.Genres)
+            {
+                <tr>
+                    <td>@obj.Id</td>
+                    <td>@obj.Name</td>
+                </tr>
+            }
+        }
+        else if (Model.GameDevelopers.Count != 0)
+        {
+            @foreach (var obj in Model.GameDevelopers)
+            {
+                <tr>
+                    <td>@obj.Id</td>
+                    <td>@obj.Name</td>
+                </tr>
+            }
+        }
+        else if (Model.GamePlatforms.Count != 0)
+        {
+            @foreach (var obj in Model.GamePlatforms)
+            {
+                <tr>
+                    <td>@obj.Id</td>
+                    <td>@obj.Name</td>
+                </tr>
+            }
+        }
+
+        else if (Model.GameLabels.Count != 0)
+        {
+            @foreach (var obj in Model.GameLabels)
+            {
+                <tr>
+                    <td>@obj.Id</td>
+                    <td>@obj.Name</td>
+                </tr>
+            }
+        }
+
+       
+       
     </tbody>
 </table>

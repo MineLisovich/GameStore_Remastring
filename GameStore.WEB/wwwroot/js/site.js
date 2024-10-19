@@ -202,6 +202,17 @@ function GetData(actionType, id, section) {
                     break;
             }
             break;
+        case "dictionaries":
+            switch (actionType) {
+                case "edit":
+                    data = { id: id, sectionName: section };
+                    break;
+                case "delete":
+                    data = { id: id, sectionName: section };
+                    break;
+            }
+            break;
+  
     }
     return data;
 }

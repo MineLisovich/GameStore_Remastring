@@ -1,4 +1,6 @@
-﻿namespace GameStore.BLL.DTO.Dictionaries
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace GameStore.BLL.DTO.Dictionaries
 {
     /// <summary>
     /// Разработчик игр DTO
@@ -10,6 +12,7 @@
         /// <summary>
         /// Наименование разработчика (компании)
         /// </summary>
+        [Required(ErrorMessage = "Поле обязательно для заполнения!")]
         public string Name { get; set; }
     }
 }

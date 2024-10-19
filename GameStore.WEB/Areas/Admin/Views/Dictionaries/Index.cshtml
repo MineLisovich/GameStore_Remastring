@@ -1,4 +1,4 @@
-﻿
+﻿@model ShowDictionatyModel
 @{
     ViewData["Title"] = "Словари";
     DictionariesTypes types = new();
@@ -12,30 +12,42 @@
     <script>
         // ШАГ 1. НАСТРОЙКА ОБЩЕГО ПОВЕДЕНИЯ МОДАЛОК
         $(document).ready(function () {
-            //Вызов DataTable
-            InitializationUsersTable();
+           
             //НАСТРОЙКА ПОВЕДЕНИЯ МОДАЛОК - Алерты
-           //AddHandlerClickForButtonsOfActionModals('modalUserManagerData', 'userManager');
+            AddHandlerClickForButtonsOfActionModals('modalDictionaryData', 'dictionaries');
 
             //НАСТРОЙКА ПОВЕДЕНИЯ МОДАЛОК: Setting modal Create & Edit
-            //AddHandlerShownModalForCreateEditModal("modalUserManagerData", "userDataManagerForm");
+            AddHandlerShownModalForCreateEditModal("modalDictionaryData", "dictionaryDataForm");
 
         });
+
         // ШАГ 2. НАСТРОЙКА МАРШРУТОВ
         function GetURLForAjaxByActionType(actionType) {
             var url = "";
             switch (actionType) {
                 case "edit":
-                   // url = '@Url.Action("GetPartialWorkOnData", "UsersManager")';
+                     url = '@Url.Action("GetPartialWorkOnData", "Dictionaries")';
                     break;
                 case "delete":
-                 //   url = '@Url.Action("DeleteUserAccount", "UsersManager")';
+                      url = '@Url.Action("DeleteDictionary", "Dictionaries")';
                     break;
             }
             return url;
         }
         // ШАГ 3. ВЫЗОВ ДОПОЛНИТЕЛЬНЫХ ФУНКЦИЙ В ГЛАВНОМ AJAX МЕТОДЕ
         function SettingBehaviorOfModalWindow(boxId, section) { }
+
+        //НАСТРОЙКА ДЛЯ ПОКАЗА ДАННЫХ В DATATABLE
+        function GetUrlFotAjaxActionGetData()
+        {
+           var url = '@Url.Action("GetDataForTable","Dictionaries")';
+           return url;
+        }
+        function SettingsDictionaryDataTable()
+        {
+           //Вызов DataTable
+            InitializationUsersTable();
+        }
 
     </script>
 }
@@ -55,16 +67,14 @@
       
     </div>
     <div class="col borderS">
-        <div class="js-showTable">
-            @* FOR TEST *@
-            @await Html.PartialAsync("_Partial.Dictionaries.List")
+        <div id="js-showTable">
+          <h4>Выберите раздел</h4>
         </div>
     </div>
 </div>
 
 <div id="modalWrapper">
-    @* FOR TEST *@
-    @await Html.PartialAsync("_Partial.Dictionaries.CreateEditForm")
+
 </div>
 
 <div id="modalActionWrapper">
@@ -75,7 +85,7 @@
 </div>
 
 <div id="lastActionDataWrapper">
-  @*   @await Html.PartialAsync("_Partial.ActionResult", Model.LastAction) *@
+    @await Html.PartialAsync("_Partial.ActionResult", Model.LastAction)
 </div>
 
 

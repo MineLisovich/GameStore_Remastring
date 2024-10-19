@@ -15,6 +15,9 @@ using GameStore.BLL.Services.EmailService;
 using GameStore.BLL.Services.UserManagerServices;
 using GameStore.BLL.Infrastrcture.AutomapperProfiles.DictionariesProfiles;
 using GameStore.BLL.Infrastrcture.AutomapperProfiles.GamesProfiles;
+using GameStore.BLL.Services.DictionariesServices;
+using GameStore.DAL.Entities.Dictionaries;
+using GameStore.BLL.DTO.Dictionaries;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -108,6 +111,11 @@ builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<IUserProfileService, UserProfileService>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IUserManagerService, UserManagerService>();
+builder.Services.AddScoped(typeof(IGenericDictionaryService<>), typeof(GenericDictionaryService<>));
+builder.Services.AddScoped<DictionaryService<Genre, GenreDTO>>();
+builder.Services.AddScoped<DictionaryService<GameDeveloper, GameDeveloperDTO>>();
+builder.Services.AddScoped<DictionaryService<GamePlatform, GamePlatformDTO>>();
+builder.Services.AddScoped<DictionaryService<GameLabel, GameLabelDTO>>();
 
 
 //Middleware

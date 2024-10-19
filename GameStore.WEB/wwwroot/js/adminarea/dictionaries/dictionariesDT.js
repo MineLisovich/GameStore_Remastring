@@ -16,9 +16,8 @@
                 enabled: true,
                 action: function () {
 
-                    //var actionType = "edit";
-                    //var section = "";
-                    //AjaxActionGetCreateEditModal(actionType, "", section)
+                    var actionType = "edit";
+                    AjaxActionGetCreateEditModal(actionType, 0, currentDictionarySection)
                     $("#modalDictionaryData").modal("show");
                   
                 }
@@ -30,13 +29,13 @@
                 className: 'btn-edit btntext btnmg',
                 enabled: false,
                 action: function () {
-                    //var id = table.cell('.selected', 2).data();
-                    //var title = "";
-                    //var message = "Вы уверены, что хотите внести изменения в данные о пользователе? ";
-                    //var actionType = "edit";
-                    //var section = "";
-                    //PrepareWarningModal(id, title, message, actionType, section)
-                    //$("#modalActionWarning").modal('show');
+                    var id = table.cell('.selected', 0).data();
+                    var title = "";
+                    var message = "Вы уверены, что хотите внести изменения в данные? ";
+                    var actionType = "edit";
+                    
+                    PrepareWarningModal(id, title, message, actionType, currentDictionarySection)
+                    $("#modalActionWarning").modal('show');
                 }
             },
             //Кнопка Удалить
@@ -45,13 +44,13 @@
                 className: 'btn-delete btntext btnmg',
                 enabled: false,
                 action: function () {
-                   // var id = table.cell('.selected', 2).data();
-                   // var title = "Удаление пользователя";
-                    //var message = "После удаления восстановить данные будет невозможно";
-                   // var actionType = "delete";
-                    //var section = "";
-                    //PrepareWarningModal(id, title, message, actionType, section)
-                    //$("#modalActionWarning").modal('show');
+                    var id = table.cell('.selected', 0).data();
+                    var title = "Удаление записи";
+                    var message = "После удаления восстановить данные будет невозможно";
+                    var actionType = "delete";
+                   
+                    PrepareWarningModal(id, title, message, actionType, currentDictionarySection)
+                    $("#modalActionWarning").modal('show');
                 },
             },
 
@@ -81,7 +80,7 @@
 
 
     // управление  кнопками disabled enabled
-    $('#usersTable tbody').on('click', 'td', function () {
+    $('#dictionariesTable tbody').on('click', 'td', function () {
         table.on('select deselect', function () {
             var selectedRows = table.rows({ selected: true }).count();
             // если выбрана только одна строка

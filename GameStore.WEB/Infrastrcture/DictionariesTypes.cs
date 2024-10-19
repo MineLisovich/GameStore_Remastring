@@ -33,7 +33,7 @@
         /// <summary>
         /// Словарь: Особенности игр
         /// </summary>
-        public readonly DictionaryType d_gamLabl = new() { OrderId = 4, RuName = "Особенности игр", SectionName = "d_gamLabl" };
+        public readonly DictionaryType d_gamLabel = new() { OrderId = 4, RuName = "Особенности игр", SectionName = "d_gamLabl" };
 
         /// <summary>
         /// Список словорей
@@ -44,7 +44,7 @@
         {
             DictionaryTypesList = new()
             {
-                d_genre, d_gamDev, d_gamPlat, d_gamLabl
+                d_genre, d_gamDev, d_gamPlat, d_gamLabel
             };
         }
     }

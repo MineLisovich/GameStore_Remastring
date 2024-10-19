@@ -1,5 +1,5 @@
-﻿
-<h4>Наименование выбранного словаря словаря</h4>
+﻿@model ShowDictionatyModel
+<h4>@Model.DictionaryName</h4>
 <div id="tableWrapper" class="row tableWrapper">
-    @await Html.PartialAsync("_Partial.Dictionaries.List.Table")
+    @await Html.PartialAsync("_Partial.Dictionaries.List.Table", Model)
 </div>
