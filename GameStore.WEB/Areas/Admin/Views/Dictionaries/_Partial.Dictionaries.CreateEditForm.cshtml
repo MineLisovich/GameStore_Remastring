@@ -1,0 +1,28 @@
+﻿@{
+   
+}
+
+<div class="modal fade modal-js" id="modalDictionaryData" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel"> Создание записи</h5>
+            </div>
+            <form id="dictionaryDataForm" asp-area="Admin" asp-controller="" asp-action="" method="post">
+              
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for=AppUser.Email>Наименование:</label>
+                        <input  id=AppUser.Email type="text" class="form-control" placeholder="Введите наименование" autocomplete="off" />
+                     @*    <span asp-validation-for="AppUser.Email" class="validError"></span> *@
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" id="btnBackFromCreateEditMode" class="btn btn-secondary" data-bs-dismiss="modal">Назад</button>
+                    <button type="submit" class="btn btn-outline-primary">Сохранить</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

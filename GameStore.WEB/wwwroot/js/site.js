@@ -213,7 +213,6 @@ function GetData(actionType, id, section) {
 function AjaxActionGetCreateEditModal(actionType, id, section) {
 
     var url = GetURLForAjaxByActionType(actionType);
-    GetData(actionType, id, section);
     console.log("AjaxActionGetCreateEditModal - " + "url: " + url);
     console.log("AjaxActionGetCreateEditModal - " + "actionType: " + actionType);
     console.log("AjaxActionGetCreateEditModal - " + "id: " + id);

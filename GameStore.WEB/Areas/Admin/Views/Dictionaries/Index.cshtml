@@ -1,0 +1,81 @@
+﻿
+@{
+    ViewData["Title"] = "Словари";
+    DictionariesTypes types = new();
+}
+
+@section js{
+    <script src="~/js/adminarea/dictionaries/dictionariesDT.js"></script> 
+    <script src="~/js/adminarea/tablelanguage.js"></script>
+    <script src="~/js/adminarea/dictionaries/dictionariesManager.js"></script>
+
+    <script>
+        // ШАГ 1. НАСТРОЙКА ОБЩЕГО ПОВЕДЕНИЯ МОДАЛОК
+        $(document).ready(function () {
+            //Вызов DataTable
+            InitializationUsersTable();
+            //НАСТРОЙКА ПОВЕДЕНИЯ МОДАЛОК - Алерты
+           //AddHandlerClickForButtonsOfActionModals('modalUserManagerData', 'userManager');
+
+            //НАСТРОЙКА ПОВЕДЕНИЯ МОДАЛОК: Setting modal Create & Edit
+            //AddHandlerShownModalForCreateEditModal("modalUserManagerData", "userDataManagerForm");
+
+        });
+        // ШАГ 2. НАСТРОЙКА МАРШРУТОВ
+        function GetURLForAjaxByActionType(actionType) {
+            var url = "";
+            switch (actionType) {
+                case "edit":
+                   // url = '@Url.Action("GetPartialWorkOnData", "UsersManager")';
+                    break;
+                case "delete":
+                 //   url = '@Url.Action("DeleteUserAccount", "UsersManager")';
+                    break;
+            }
+            return url;
+        }
+        // ШАГ 3. ВЫЗОВ ДОПОЛНИТЕЛЬНЫХ ФУНКЦИЙ В ГЛАВНОМ AJAX МЕТОДЕ
+        function SettingBehaviorOfModalWindow(boxId, section) { }
+
+    </script>
+}
+<h1>Словари</h1>
+<a asp-controller="Home" asp-action="Index" class="btn btn-outline-primary">Вернутся к выбору разделов</a>
+
+<div class="row mt-5">
+    <div class="col-4  ">
+        <div class="d-grid gap-2 col-6 mx-auto">
+
+            @foreach(var btn in types.DictionaryTypesList)
+            {
+                <button type="button" id="d_@btn.OrderId" data-section="@btn.SectionName" class="btn btn-outline-primary js-dictionaryBtn">@btn.RuName</button>
+            }
+           
+        </div>
+      
+    </div>
+    <div class="col borderS">
+        <div class="js-showTable">
+            @* FOR TEST *@
+            @await Html.PartialAsync("_Partial.Dictionaries.List")
+        </div>
+    </div>
+</div>
+
+<div id="modalWrapper">
+    @* FOR TEST *@
+    @await Html.PartialAsync("_Partial.Dictionaries.CreateEditForm")
+</div>
+
+<div id="modalActionWrapper">
+    @await Html.PartialAsync("_Partial.Action.DataNotSaved")
+    @await Html.PartialAsync("_Partial.Action.Warning")
+    @await Html.PartialAsync("_Partial.Action.Success")
+    @await Html.PartialAsync("_Partial.Action.Error")
+</div>
+
+<div id="lastActionDataWrapper">
+  @*   @await Html.PartialAsync("_Partial.ActionResult", Model.LastAction) *@
+</div>
+
+
